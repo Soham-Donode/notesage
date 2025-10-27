@@ -1,17 +1,31 @@
-"use client"
+"use client";
 import React, { useState } from "react";
-import { Pencil, Link as LinkIcon, ChevronRight, Search } from "lucide-react";
-import Image from "next/image";
+import { Pencil, Link as LinkIcon, ChevronRight } from "lucide-react";
 
-export default function AIGenerateCard({
+interface GenerateProps {
+  text: string;
+  role: string;
+}
+
+interface PromptBoxProps {
+  onGenerate?: (props: GenerateProps) => void;
+  navbarHeight?: number;
+}
+
+export default function PromptBox({
   onGenerate = () => {},
   navbarHeight = 64,
-}) {
+}: PromptBoxProps) {
   const [text, setText] = useState("");
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState("student"); // Default to "student" for better UX
+
+  const handleGenerateClick = () => {
+    if (!text.trim()) return; // Early return for empty input
+    onGenerate({ text, role });
+  };  
 
   return (
-    <div className="flex justify-center items-start w-full  pt-[calc(var(--navbar-height,64px)+2rem)]">
+    <div className="flex justify-center items-start w-full pt-[calc(var(--navbar-height,64px)+2rem)]">
       <div className="w-full max-w-2xl px-4">
         {/* Hero Text */}
         <h1 className="text-center text-2xl font-semibold text-gray-800 mb-6">
@@ -23,14 +37,14 @@ export default function AIGenerateCard({
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Describe the the topic"
+            placeholder="Describe the topic"
             className="w-full resize-none h-28 text-lg font-mono text-gray-700 placeholder-gray-400 bg-transparent outline-none"
           />
 
           <div className="flex items-center justify-between mt-4">
             <div className="flex items-center gap-2">
               <label htmlFor="role" className="text-sm text-gray-500">
-                I am a :
+                I am a:
               </label>
               <select
                 id="role"
@@ -38,7 +52,6 @@ export default function AIGenerateCard({
                 onChange={(e) => setRole(e.target.value)}
                 className="text-sm border border-gray-200 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-400"
               >
-      
                 <option value="student">Student</option>
                 <option value="teacher">Teacher</option>
                 <option value="researcher">Researcher</option>
@@ -56,8 +69,9 @@ export default function AIGenerateCard({
               </button>
               <button
                 type="button"
-                // onClick={() => onGenerate({ text, role })}
-                className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-blue-500 text-white text-sm shadow hover:bg-blue-600"
+                onClick={handleGenerateClick}
+                disabled={!text.trim()}
+                className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-blue-500 text-white text-sm shadow hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span>Generate</span>
                 <Pencil size={14} />
