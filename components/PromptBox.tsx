@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Pencil, Link as LinkIcon, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 interface GenerateProps {
   text: string;
@@ -90,13 +91,14 @@ export default function PromptBox({
 
         {/* Secondary Action */}
         <div className="flex justify-center mt-6">
-          <button
+          <Link
+          href="/mynotes"
             type="button"
             className="inline-flex items-center gap-2 border border-gray-200 rounded-full px-6 py-2 bg-white shadow-sm hover:bg-gray-50"
           >
             <span>Check out notes communities</span>
             <ChevronRight size={14} />
-          </button>
+          </Link>
         </div>
       </div>
     </div>
