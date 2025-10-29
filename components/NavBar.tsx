@@ -19,9 +19,9 @@ export function NavBar() {
           </Link>
         </div>
         <div className="flex items-center gap-6 text-gray-700 text-sm">
-          <a href="#" className="hover:text-black font-semibold">Home</a>
-          <a href="#" className="hover:text-black font-semibold">Explore</a>
-          <a href="#" className="hover:text-black font-semibold">My Notes</a>
+          <Link href="/" className="hover:text-black font-semibold">Home</Link>
+          <Link href="/explore" className="hover:text-black font-semibold">Explore</Link>
+          <Link href="/mynotes" className="hover:text-black font-semibold">My Notes</Link>
         </div>
       </div>
       <div className="flex items-center gap-6">
