@@ -86,6 +86,7 @@ export default function NoteSage() {
   const [showPostModal, setShowPostModal] = useState(false);
   const [posting, setPosting] = useState(false);
   const [saving, setSaving] = useState(false); // Track saving state
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
 
   const searchParams = useSearchParams();
   const prompt = searchParams.get("prompt");
@@ -132,11 +133,28 @@ export default function NoteSage() {
           setIsGenerating(false);
         }
       } else {
-        // Fallback to localStorage for existing sessions
+        // Check if we're editing a note
+        const editNoteData = localStorage.getItem('editNote');
+        if (editNoteData) {
+          try {
+            const note = JSON.parse(editNoteData);
+            setMarkdown(note.content);
+            setEditingNoteId(note._id);
+            localStorage.removeItem('editNote'); // Clean up
+          } catch (error) {
+            console.error('Error parsing edit note data:', error);
+          }
+        }
+
+        // Check for stored notes data
         const stored = localStorage.getItem("notesData");
-        if (stored) {
-          const { markdown: storedMarkdown } = JSON.parse(stored);
-          setMarkdown(storedMarkdown);
+        if (stored && !editNoteData) {
+          try {
+            const { markdown: storedMarkdown } = JSON.parse(stored);
+            setMarkdown(storedMarkdown);
+          } catch (error) {
+            console.error("Error parsing stored notes:", error);
+          }
         } else {
           setMarkdown(`# Generated Notes
 
@@ -260,22 +278,45 @@ export default function NoteSage() {
       const titleLine = lines.find(line => line.startsWith('# '));
       const title = titleLine ? titleLine.replace('# ', '').trim() : 'Generated Notes';
 
-      const response = await fetch('/api/notes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title,
-          content: markdown,
-          role: 'Generated Notes',
-          tags: ['generated'],
-          isPublic: false,
-        }),
-      });
+      let response;
+      if (editingNoteId) {
+        // Update existing note
+        response = await fetch('/api/notes', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: editingNoteId,
+            title,
+            content: markdown,
+            role: 'Generated Notes',
+            tags: ['generated'],
+            isPublic: false,
+          }),
+        });
+      } else {
+        // Create new note
+        response = await fetch('/api/notes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title,
+            content: markdown,
+            role: 'Generated Notes',
+            tags: ['generated'],
+            isPublic: false,
+          }),
+        });
+      }
 
       if (response.ok) {
-        alert('Notes saved successfully!');
+        alert(editingNoteId ? 'Note updated successfully!' : 'Notes saved successfully!');
+        if (editingNoteId) {
+          setEditingNoteId(null);
+        }
       } else {
         const error = await response.json();
         alert(`Error saving notes: ${error.error}`);
@@ -334,7 +375,7 @@ export default function NoteSage() {
               aria-label="Save to My Notes"
               className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-purple-500 text-white text-sm shadow hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
-              <span>{saving ? 'Saving...' : 'Save to My Notes'}</span>
+              <span>{saving ? 'Saving...' : editingNoteId ? 'Update Note' : 'Save to My Notes'}</span>
             </button>
             <button
               onClick={() => setShowPostModal(true)}

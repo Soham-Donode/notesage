@@ -4,10 +4,10 @@ import Post from '@/models/Post';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const postId = params.id;
+    const { id: postId } = await params;
 
     if (!postId) {
       return NextResponse.json({ error: 'Post ID is required' }, { status: 400 });

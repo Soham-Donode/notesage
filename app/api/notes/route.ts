@@ -134,37 +134,3 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
-
-export async function DELETE(request: Request) {
-  try {
-    const { userId: clerkId } = await auth();
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
-
-    if (!clerkId || !id) {
-      return NextResponse.json({ error: 'Unauthorized or missing ID' }, { status: 401 });
-    }
-
-    await dbConnect();
-
-    const user = await User.findOne({
-      'authProvider.provider': 'clerk',
-      'authProvider.providerUserId': clerkId,
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
-    const note = await Note.findOneAndDelete({ _id: id, userId: user._id });
-
-    if (!note) {
-      return NextResponse.json({ error: 'Note not found' }, { status: 404 });
-    }
-
-    return NextResponse.json({ message: 'Note deleted successfully' });
-  } catch (error) {
-    console.error('Error deleting note:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
