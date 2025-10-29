@@ -9,6 +9,8 @@ interface IPost extends Document {
   userAvatar?: string;
   upvotes: number;
   downvotes: number;
+  comments: string; // JSON string of comments array
+  views: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,6 +28,8 @@ const PostSchema: Schema = new Schema({
   userAvatar: { type: String },
   upvotes: { type: Number, default: 0 },
   downvotes: { type: Number, default: 0 },
+  comments: { type: String, default: '[]' }, // JSON string of comments array
+  views: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

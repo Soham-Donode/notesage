@@ -17,6 +17,14 @@ export async function GET(request: NextRequest) {
 
     const posts = await Post.find({ topic }).sort({ createdAt: -1 });
 
+    // Ensure all posts have comments field initialized
+    for (const post of posts) {
+      if (!post.comments) {
+        post.comments = '[]';
+        await post.save();
+      }
+    }
+
     return NextResponse.json(posts);
   } catch (error) {
     console.error('Error fetching posts:', error);

@@ -104,13 +104,51 @@ const TopicPage = () => {
 	}, [slug]);
 
 	const handleUpvote = async (postId: string) => {
-		// TODO: Implement voting API
-		console.log('Upvote', postId);
+		try {
+			const response = await fetch('/api/posts/vote', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ postId, voteType: 'upvote' }),
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				// Update the post in state
+				setPosts(posts.map(post =>
+					post._id === postId
+						? { ...post, upvotes: data.upvotes, downvotes: data.downvotes }
+						: post
+				));
+			}
+		} catch (error) {
+			console.error('Error upvoting:', error);
+		}
 	};
 
 	const handleDownvote = async (postId: string) => {
-		// TODO: Implement voting API
-		console.log('Downvote', postId);
+		try {
+			const response = await fetch('/api/posts/vote', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ postId, voteType: 'downvote' }),
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				// Update the post in state
+				setPosts(posts.map(post =>
+					post._id === postId
+						? { ...post, upvotes: data.upvotes, downvotes: data.downvotes }
+						: post
+				));
+			}
+		} catch (error) {
+			console.error('Error downvoting:', error);
+		}
 	};
 
 	if (!topic) {
@@ -176,6 +214,7 @@ const TopicPage = () => {
 									user={post.userDisplayName}
 									upvotes={post.upvotes}
 									downvotes={post.downvotes}
+									comments={post.comments}
 									createdAt={post.createdAt}
 									onUpvote={() => handleUpvote(post._id)}
 									onDownvote={() => handleDownvote(post._id)}
