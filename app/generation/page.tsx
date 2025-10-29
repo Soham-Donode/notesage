@@ -178,15 +178,15 @@ export default function NoteSage() {
                 onClick={handleExport}
                 disabled={loading || !markdown.trim()}
                 aria-label="Export to PDF"
-                className="inline-flex items-center gap-2 rounded-full px-3 py-2 bg-blue-500 text-white text-sm shadow hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="inline-flex relative items-center gap-2 rounded-full z-[9999] px-3 py-2 bg-blue-500 text-white text-sm shadow hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 <Download size={16} />
-                <span>PDF</span>
+                <span>Export to pdf</span>
               </button>
             </div>
 
             {loading ? (
-              <div className="flex items-center justify-center h-[72vh]">
+              <div className="flex items-center justify-center h-[86vh]">
                 <p 
                   className={`text-3xl text-slate-500 ${
                     isGenerating ? 'pulse-opacity' : ''
