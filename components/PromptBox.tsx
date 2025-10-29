@@ -22,7 +22,14 @@ export default function PromptBox({
   const handleGenerateClick = () => {
     if (!text.trim()) return; // Early return for empty input
     onGenerate({ text, role });
-  };  
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleGenerateClick();
+    }
+  };
 
   return (
     <div className="flex justify-center items-start w-full pt-[calc(var(--navbar-height,64px)+2rem)]">
@@ -37,6 +44,7 @@ export default function PromptBox({
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder="Describe the topic"
             className="w-full resize-none h-28 text-lg font-mono text-gray-700 placeholder-gray-400 bg-transparent outline-none"
           />

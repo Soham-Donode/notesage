@@ -6,3 +6,16 @@
   --color-grad: #3ab7bf;
   --color-bermuda: #78dcca;
 }
+
+@keyframes pulse-opacity {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.pulse-opacity {
+  animation: pulse-opacity 1.5s ease-in-out infinite;
+}
