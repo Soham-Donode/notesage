@@ -1,29 +1,21 @@
 import { auth } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import Post from '@/models/Post';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const { userId: clerkId } = await auth();
+    const { searchParams } = new URL(request.url);
+    const topic = searchParams.get('topic');
 
-    if (!clerkId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!topic) {
+      return NextResponse.json({ error: 'Topic is required' }, { status: 400 });
     }
 
     await dbConnect();
 
-    const user = await User.findOne({
-      'authProvider.provider': 'clerk',
-      'authProvider.providerUserId': clerkId,
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
-    const posts = await Post.find({ userId: user._id }).sort({ createdAt: -1 });
+    const posts = await Post.find({ topic }).sort({ createdAt: -1 });
 
     return NextResponse.json(posts);
   } catch (error) {
@@ -32,7 +24,7 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const { userId: clerkId } = await auth();
 
@@ -40,10 +32,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { title, content, role, tags, isPublic } = await request.json();
+    const { title, content, topic } = await request.json();
 
-    if (!title || !content) {
-      return NextResponse.json({ error: 'Title and content are required' }, { status: 400 });
+    if (!title || !content || !topic) {
+      return NextResponse.json({ error: 'Title, content, and topic are required' }, { status: 400 });
     }
 
     await dbConnect();
@@ -58,12 +50,12 @@ export async function POST(request: Request) {
     }
 
     const post = await Post.create({
-      userId: user._id,
       title,
       content,
-      role: role || 'General',
-      tags: tags || [],
-      isPublic: isPublic || false,
+      topic,
+      userId: user._id,
+      userDisplayName: user.displayName,
+      userAvatar: user.avatarUrl,
     });
 
     return NextResponse.json(post, { status: 201 });

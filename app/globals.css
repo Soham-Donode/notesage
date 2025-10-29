@@ -1,10 +1,22 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@theme {
-  --color-brown: #b9937b;
-  --color-grad: #3ab7bf;
-  --color-bermuda: #78dcca;
+@layer utilities {
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+
+  .line-clamp-6 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
+    line-clamp: 6;
+  }
 }
 
 @keyframes pulse-opacity {

@@ -1,4 +1,4 @@
-import { Webhook, WebhookEvent } from 'svix';
+import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
@@ -30,7 +30,7 @@ export async function POST(req: Request) {
   // Create a new Webhook instance with your webhook secret
   const wh = new Webhook(CLERK_WEBHOOK_SECRET);
 
-  let evt: WebhookEvent;
+  let evt: any;
 
   // Verify the webhook
   try {
