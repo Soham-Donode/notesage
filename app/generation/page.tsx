@@ -85,6 +85,7 @@ export default function NoteSage() {
   const [isGenerating, setIsGenerating] = useState(false); // Track generation-specific loading
   const [showPostModal, setShowPostModal] = useState(false);
   const [posting, setPosting] = useState(false);
+  const [saving, setSaving] = useState(false); // Track saving state
 
   const searchParams = useSearchParams();
   const prompt = searchParams.get("prompt");
@@ -246,6 +247,47 @@ export default function NoteSage() {
     }
   };
 
+  const handleSaveToNotes = async () => {
+    if (!markdown.trim()) {
+      console.warn("No content available to save.");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      // Extract title from the first heading in markdown
+      const lines = markdown.split('\n');
+      const titleLine = lines.find(line => line.startsWith('# '));
+      const title = titleLine ? titleLine.replace('# ', '').trim() : 'Generated Notes';
+
+      const response = await fetch('/api/notes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          content: markdown,
+          role: 'Generated Notes',
+          tags: ['generated'],
+          isPublic: false,
+        }),
+      });
+
+      if (response.ok) {
+        alert('Notes saved successfully!');
+      } else {
+        const error = await response.json();
+        alert(`Error saving notes: ${error.error}`);
+      }
+    } catch (error) {
+      console.error('Error saving notes:', error);
+      alert('Error saving notes. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading && !mounted) {
     return (
       <div className="h-screen w-full flex items-center justify-center">
@@ -286,6 +328,14 @@ export default function NoteSage() {
         <main className="flex-1 overflow-auto p-6">
           {/* Action Buttons Header */}
           <div className="mb-4 flex justify-end gap-3">
+            <button
+              onClick={handleSaveToNotes}
+              disabled={loading || !markdown.trim() || saving}
+              aria-label="Save to My Notes"
+              className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-purple-500 text-white text-sm shadow hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            >
+              <span>{saving ? 'Saving...' : 'Save to My Notes'}</span>
+            </button>
             <button
               onClick={() => setShowPostModal(true)}
               disabled={loading || !markdown.trim()}

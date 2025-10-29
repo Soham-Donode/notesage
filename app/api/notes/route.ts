@@ -2,11 +2,13 @@ import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
-import Post from '@/models/Post';
+import Note from '@/models/Note';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const { userId: clerkId } = await auth();
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get('search');
 
     if (!clerkId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -23,11 +25,22 @@ export async function GET() {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const posts = await Post.find({ userId: user._id }).sort({ createdAt: -1 });
+    let query: any = { userId: user._id };
 
-    return NextResponse.json(posts);
+    // Add search functionality
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { content: { $regex: search, $options: 'i' } },
+        { tags: { $in: [new RegExp(search, 'i')] } },
+      ];
+    }
+
+    const notes = await Note.find(query).sort({ createdAt: -1 });
+
+    return NextResponse.json(notes);
   } catch (error) {
-    console.error('Error fetching posts:', error);
+    console.error('Error fetching notes:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -57,7 +70,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const post = await Post.create({
+    const note = await Note.create({
       userId: user._id,
       title,
       content,
@@ -66,9 +79,92 @@ export async function POST(request: Request) {
       isPublic: isPublic || false,
     });
 
-    return NextResponse.json(post, { status: 201 });
+    return NextResponse.json(note, { status: 201 });
   } catch (error) {
-    console.error('Error creating post:', error);
+    console.error('Error creating note:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const { userId: clerkId } = await auth();
+
+    if (!clerkId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { id, title, content, role, tags, isPublic } = await request.json();
+
+    if (!id || !title || !content) {
+      return NextResponse.json({ error: 'ID, title and content are required' }, { status: 400 });
+    }
+
+    await dbConnect();
+
+    const user = await User.findOne({
+      'authProvider.provider': 'clerk',
+      'authProvider.providerUserId': clerkId,
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const note = await Note.findOneAndUpdate(
+      { _id: id, userId: user._id },
+      {
+        title,
+        content,
+        role: role || 'General',
+        tags: tags || [],
+        isPublic: isPublic || false,
+        updatedAt: new Date(),
+      },
+      { new: true }
+    );
+
+    if (!note) {
+      return NextResponse.json({ error: 'Note not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(note);
+  } catch (error) {
+    console.error('Error updating note:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { userId: clerkId } = await auth();
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!clerkId || !id) {
+      return NextResponse.json({ error: 'Unauthorized or missing ID' }, { status: 401 });
+    }
+
+    await dbConnect();
+
+    const user = await User.findOne({
+      'authProvider.provider': 'clerk',
+      'authProvider.providerUserId': clerkId,
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const note = await Note.findOneAndDelete({ _id: id, userId: user._id });
+
+    if (!note) {
+      return NextResponse.json({ error: 'Note not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: 'Note deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting note:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
