@@ -35,6 +35,7 @@
     "@wysimark/react": "^3.0.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "duckduckgo-search": "^1.0.7",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.12.1",
     "lucide-react": "^0.536.0",
