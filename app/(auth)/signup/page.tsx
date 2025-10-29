@@ -56,8 +56,8 @@ const SignUpPage = () => {
         await setActive({ session: completeSignUp.createdSessionId });
         router.push("/my-notes");
       }
-    } catch (err: any) {
-      setError(err.errors?.[0]?.message || "Invalid verification code");
+    } catch (err: unknown) {
+      setError((err as any)?.errors?.[0]?.message || "Invalid verification code");
     } finally {
       setLoading(false);
     }
@@ -72,8 +72,8 @@ const SignUpPage = () => {
         redirectUrl: "/mynotes",
         redirectUrlComplete: "/mynotes",
       });
-    } catch (err: any) {
-      setError(err.errors?.[0]?.message || "Something went wrong");
+    } catch (err: unknown) {
+      setError((err as any)?.errors?.[0]?.message || "Something went wrong");
     }
   };
 

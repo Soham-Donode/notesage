@@ -1,12 +1,22 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 
 export async function POST(request: NextRequest) {
   try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { currentMarkdown, refactorPrompt } = await request.json();
 
     if (!currentMarkdown || !refactorPrompt) {
-      return NextResponse.json({ error: "Current notes and refactor prompt are required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Current notes and refactor prompt are required" },
+        { status: 400 }
+      );
     }
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);

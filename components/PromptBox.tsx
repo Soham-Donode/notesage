@@ -13,12 +13,10 @@ interface GenerateProps {
 
 interface PromptBoxProps {
   onGenerate?: (props: GenerateProps) => void;
-  navbarHeight?: number;
 }
 
 export default function PromptBox({
   onGenerate = () => {},
-  navbarHeight = 64,
 }: PromptBoxProps) {
   const [text, setText] = useState("");
   const [role, setRole] = useState("student"); // Default to "student" for better UX

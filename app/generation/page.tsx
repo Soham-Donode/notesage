@@ -6,8 +6,13 @@ import html2pdf from "html2pdf.js";
 import { NavBar } from "@/components/NavBar";
 import { ArrowRight, Download } from "lucide-react";
 import { Editable, useEditor } from "@wysimark/react";
+import { useAuth } from "@clerk/nextjs";
+import AuthModal from "@/components/AuthModal";
+import { useRouter } from "next/navigation";
 
 export default function NoteSage() {
+  const { userId, isLoaded } = useAuth();
+  const router = useRouter();
   const [refactorText, setRefactorText] = useState("");
   const [mounted, setMounted] = useState(false);
   const [markdown, setMarkdown] = useState("");
@@ -125,9 +130,9 @@ export default function NoteSage() {
     const opt = {
       margin: [10, 10, 10, 10] as [number, number, number, number],
       filename: filename,
-      image: { type: "jpeg", quality: 0.98 },
+      image: { type: "jpeg" as const, quality: 0.98 },
       html2canvas: { scale: 2 },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" as const },
     };
 
     // Generate PDF from the editor container
@@ -219,6 +224,13 @@ export default function NoteSage() {
           </div>
         </main>
       </div>
+
+      {!isLoaded ? null : !userId && (
+        <AuthModal
+          onLogin={() => router.push("/login")}
+          onSignup={() => router.push("/signup")}
+        />
+      )}
     </div>
   );
 }

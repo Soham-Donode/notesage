@@ -1,10 +1,9 @@
 "use client";
-import { Pencil, Link as LinkIcon, ChevronRight, Search } from "lucide-react";
-import { useState } from "react";
-import { Button } from "./ui/button"; // Optional: Reuse if needed for other buttons
+import { Search } from "lucide-react";
 import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
 import { UserButton } from "@clerk/clerk-react";
 import Link from "next/link";
+import { Button } from "./ui/button"; // Optional: Reuse if needed for other buttons
 
 export function NavBar() {
   const { userId } = useAuth();

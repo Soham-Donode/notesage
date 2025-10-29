@@ -31,8 +31,8 @@ const LoginPage = () => {
       } else {
         console.log(JSON.stringify(result, null, 2));
       }
-    } catch (err: any) {
-      setError(err.errors?.[0]?.message || "Invalid email or password");
+    } catch (err: unknown) {
+      setError((err as Error)?.message || "Invalid email or password");
     } finally {
       setLoading(false);
     }
@@ -47,8 +47,9 @@ const LoginPage = () => {
         redirectUrl: "/mynotes",
         redirectUrlComplete: "/mynotes",
       });
-    } catch (err: any) {
-      setError(err.errors?.[0]?.message || "Something went wrong");
+    } catch (err: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setError((err as any)?.errors?.[0]?.message || "Something went wrong");
     }
   };
 
@@ -175,12 +176,11 @@ const LoginPage = () => {
           </form>
 
           <p className="text-center text-sm text-gray-600 mt-6">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <a
               href="/sign-up"
               className="text-black font-semibold hover:underline"
             >
-              Sign up
             </a>
           </p>
         </div>
