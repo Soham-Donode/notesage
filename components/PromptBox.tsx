@@ -63,34 +63,34 @@ export default function PromptBox({
 
   return (
     <>
-      <div className="flex justify-center items-start w-full pt-[calc(var(--navbar-height,64px)+2rem)]">
+      <div className="flex justify-center items-start w-full pt-[150px]">
         <div className="w-full max-w-2xl px-4">
           {/* Hero Text */}
-          <h1 className="text-center text-2xl font-semibold text-gray-800 mb-6">
+          <h1 className="text-center text-2xl font-semibold text-foreground mb-6">
             Notes tailored to your taste
           </h1>
 
           {/* Main Card */}
-          <div className="bg-white border border-gray-200 rounded-2xl shadow-md p-6">
+          <div className="bg-card border border-border rounded-2xl shadow-sm p-6 hover:shadow-md transition-all duration-300 hover-scale">
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Describe the topic"
-              className="w-full resize-none h-28 text-lg font-mono text-gray-700 placeholder-gray-400 bg-transparent outline-none"
+              className="w-full resize-none h-28 text-lg font-mono text-foreground placeholder-muted-foreground bg-transparent outline-none"
               disabled={!isLoaded}
             />
 
             <div className="flex items-center justify-between mt-4">
               <div className="flex items-center gap-2">
-                <label htmlFor="role" className="text-sm text-gray-500">
+                <label htmlFor="role" className="text-sm text-muted-foreground">
                   I am a:
                 </label>
                 <select
                   id="role"
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="text-sm border border-gray-200 rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-400"
+                  className="text-sm border border-input bg-background rounded-md px-2 py-1 focus:outline-none focus:ring-1 focus:ring-ring text-foreground"
                   disabled={!isLoaded}
                 >
                   <option value="student">Student</option>
@@ -104,7 +104,7 @@ export default function PromptBox({
                 <button
                   type="button"
                   aria-label="Attach link"
-                  className="flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 shadow-sm hover:bg-gray-100"
+                  className="flex h-8 w-8 items-center justify-center rounded-md border border-input shadow-sm hover:bg-accent text-muted-foreground hover:text-accent-foreground hover-scale"
                   disabled={!isLoaded}
                 >
                   <LinkIcon size={14} />
@@ -113,7 +113,7 @@ export default function PromptBox({
                   type="button"
                   onClick={handleGenerateClick}
                   disabled={!isLoaded || !text.trim()}
-                  className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-blue-500 text-white text-sm shadow hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-primary text-primary-foreground text-sm shadow hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed hover-scale button-press"
                 >
                   <span>Generate</span>
                   <Pencil size={14} />
@@ -125,8 +125,8 @@ export default function PromptBox({
           {/* Secondary Action */}
           <div className="flex justify-center mt-6">
             <Link
-              href="/mynotes"
-              className="inline-flex items-center gap-2 border border-gray-200 rounded-full px-6 py-2 bg-white shadow-sm hover:bg-gray-50"
+              href="/explore"
+              className="inline-flex items-center gap-2 border border-border rounded-full px-6 py-2 bg-background shadow-sm hover:bg-accent hover:text-accent-foreground hover-scale"
             >
               <span>Check out notes communities</span>
               <ChevronRight size={14} />

@@ -142,13 +142,13 @@ const MyNotesPage = () => {
   return (
     <>
       <NavBar />
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="min-h-screen bg-gradient-to-br from-background to-muted">
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">My Notes</h1>
+            <h1 className="text-3xl font-bold text-foreground">My Notes</h1>
             <button
               onClick={() => router.push('/generation')}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+              className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg transition-colors hover-scale"
             >
               <Plus className="w-4 h-4" />
               Create New Note
@@ -158,36 +158,36 @@ const MyNotesPage = () => {
           {/* Search Bar */}
           <div className="mb-6">
             <div className="relative max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <input
                 type="text"
                 placeholder="Search notes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-input bg-background rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder-muted-foreground"
               />
             </div>
           </div>
 
           {userLoading || loading ? (
             <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading your notes...</p>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading your notes...</p>
             </div>
           ) : !userData ? (
             <div className="text-center py-12">
-              <p className="text-gray-600 mb-4">Please log in to view your notes.</p>
+              <p className="text-muted-foreground mb-4">Please log in to view your notes.</p>
               <AuthModal onLogin={handleLogin} onSignup={handleSignup} />
             </div>
           ) : filteredNotes.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-600 mb-4">
+              <p className="text-muted-foreground mb-4">
                 {searchQuery ? 'No notes found matching your search.' : 'No notes yet.'}
               </p>
               {!searchQuery && (
                 <button
                   onClick={() => router.push('/generation')}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-lg transition-colors hover-scale"
                 >
                   Generate Your First Notes
                 </button>
@@ -196,27 +196,27 @@ const MyNotesPage = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredNotes.map((note) => (
-                <div key={note._id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <div key={note._id} className="bg-card border border-border rounded-lg p-6 hover:shadow-md transition-shadow hover-scale">
                   <div className="flex items-start justify-between mb-3">
-                    <h3 className="font-semibold text-lg text-gray-900 line-clamp-2">{note.title}</h3>
+                    <h3 className="font-semibold text-lg text-card-foreground line-clamp-2">{note.title}</h3>
                     <div className="flex gap-1 ml-2">
                       <button
                         onClick={() => handleEditNote(note)}
-                        className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
+                        className="p-1 text-muted-foreground hover:text-primary transition-colors"
                         title="Edit note"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handlePostNote(note)}
-                        className="p-1 text-gray-400 hover:text-green-600 transition-colors"
+                        className="p-1 text-muted-foreground hover:text-green-600 transition-colors"
                         title="Post to community"
                       >
                         <Share className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteNote(note._id)}
-                        className="p-1 text-gray-400 hover:text-red-600 transition-colors"
+                        className="p-1 text-muted-foreground hover:text-destructive transition-colors"
                         title="Delete note"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -224,23 +224,23 @@ const MyNotesPage = () => {
                     </div>
                   </div>
 
-                  <p className="text-sm text-gray-500 mb-2">Role: {note.role}</p>
+                  <p className="text-sm text-muted-foreground mb-2">Role: {note.role}</p>
 
-                  <div className="text-sm text-gray-700 mb-3 line-clamp-3">
+                  <div className="text-sm text-card-foreground mb-3 line-clamp-3">
                     {note.content.substring(0, 150)}...
                   </div>
 
                   {note.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-3">
                       {note.tags.map((tag, index) => (
-                        <span key={index} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">
+                        <span key={index} className="bg-secondary text-secondary-foreground px-2 py-1 rounded-full text-xs">
                           {tag}
                         </span>
                       ))}
                     </div>
                   )}
 
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-muted-foreground">
                     Created: {new Date(note.createdAt).toLocaleDateString()}
                     {note.updatedAt !== note.createdAt && (
                       <span className="ml-2">

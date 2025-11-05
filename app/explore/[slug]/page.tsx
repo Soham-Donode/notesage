@@ -179,13 +179,6 @@ const TopicPage = () => {
 					<p className="text-xl text-gray-600 max-w-2xl mx-auto">
 						{topic.description}
 					</p>
-					<div className="mt-6 flex justify-center">
-						<div className="bg-white rounded-full px-6 py-3 shadow-md">
-							<span className="text-gray-700 font-medium">
-								Community Discussions
-							</span>
-						</div>
-					</div>
 				</div>
 
 				<div className="mb-8 flex justify-center">

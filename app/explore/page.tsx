@@ -72,21 +72,21 @@ const topics = [
 
 const page = () => {
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+		<div className="min-h-screen bg-gradient-to-br from-background to-muted">
 			<NavBar />
 			<div className="container mx-auto px-4 py-8">
 				<div className="text-center mb-12">
-					<h1 className="text-5xl font-bold text-gray-900 mb-4">
+					<h1 className="text-5xl font-bold text-foreground mb-4">
 						Explore Topics
 					</h1>
-					<p className="text-xl text-gray-600 max-w-2xl mx-auto">
+					<p className="text-xl text-muted-foreground max-w-2xl mx-auto">
 						Discover and share knowledge across various academic disciplines
 					</p>
 				</div>
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
 					{topics.map((topic) => (
 						<Link key={topic.slug} href={`/explore/${topic.slug}`}>
-							<div className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden cursor-pointer transform hover:-translate-y-2 border border-gray-100">
+							<div className="group relative bg-card rounded-2xl shadow-sm hover:shadow-md transition-all duration-500 overflow-hidden cursor-pointer transform hover:-translate-y-2 border border-border hover-scale">
 								<div className="relative h-56">
 									<Image
 										src={topic.image}
@@ -103,13 +103,13 @@ const page = () => {
 										<span className="text-white text-sm font-medium">Explore</span>
 									</div>
 								</div>
-								<div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50">
+								<div className="p-6 bg-gradient-to-r from-muted to-accent/50">
 									<div className="flex items-center justify-between">
-										<div className="flex items-center text-sm text-gray-600">
+										<div className="flex items-center text-sm text-muted-foreground">
 											<div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
 											Active Community
 										</div>
-										<div className="text-blue-600 font-semibold text-sm">View Posts →</div>
+										<div className="text-primary font-semibold text-sm">View Posts →</div>
 									</div>
 								</div>
 							</div>

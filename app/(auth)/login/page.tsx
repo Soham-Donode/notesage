@@ -54,26 +54,26 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
       <div className="w-full max-w-md">
         {/* Brand Section */}
         <div className="text-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <h1 className="text-4xl font-bold text-black mb-2">NoteSage</h1>
-          <p className="text-gray-600">Welcome back! Sign in to continue</p>
+          <h1 className="text-4xl font-bold text-foreground mb-2">NoteSage</h1>
+          <p className="text-muted-foreground">Welcome back! Sign in to continue</p>
         </div>
 
         {/* Main Card */}
-        <div className="bg-white shadow-2xl rounded-3xl border-2 border-gray-200 p-8 animate-in fade-in slide-in-from-bottom-6 duration-700">
+        <div className="bg-card shadow-2xl rounded-3xl border-2 border-border p-8 animate-in fade-in slide-in-from-bottom-6 duration-700">
           {/* Google Sign In */}
           <button
             onClick={handleGoogleSignIn}
-            className="w-full group relative px-6 py-3 bg-white text-black rounded-xl font-semibold
-                       border-2 border-black
+            className="w-full group relative px-6 py-3 bg-background text-foreground rounded-xl font-semibold
+                       border-2 border-border
                        shadow-md hover:shadow-lg hover:-translate-y-0.5
                        active:translate-y-0 active:shadow-md
                        transition-all duration-200
-                       focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2
-                       overflow-hidden mb-6"
+                       focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+                       overflow-hidden mb-6 hover-scale"
           >
             <span className="relative z-10 flex items-center justify-center gap-3">
               <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -96,28 +96,28 @@ const LoginPage = () => {
               </svg>
               Continue with Google
             </span>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-foreground/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
           </button>
 
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
+              <div className="w-full border-t border-border"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">or</span>
+              <span className="px-4 bg-card text-muted-foreground">or</span>
             </div>
           </div>
 
           {/* Email/Password Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">
+              <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-sm">
                 {error}
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-black mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Email address
               </label>
               <input
@@ -125,15 +125,15 @@ const LoginPage = () => {
                 value={emailAddress}
                 onChange={(e) => setEmailAddress(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 
-                           focus:border-black focus:ring-0 focus:outline-none
-                           transition-colors"
+                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background
+                           focus:border-primary focus:ring-0 focus:outline-none
+                           transition-colors text-foreground placeholder-muted-foreground"
                 placeholder="your@email.com"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black mb-2">
+              <label className="block text-sm font-medium text-foreground mb-2">
                 Password
               </label>
               <input
@@ -141,9 +141,9 @@ const LoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 
-                           focus:border-black focus:ring-0 focus:outline-none
-                           transition-colors"
+                className="w-full px-4 py-3 rounded-xl border-2 border-input bg-background
+                           focus:border-primary focus:ring-0 focus:outline-none
+                           transition-colors text-foreground placeholder-muted-foreground"
                 placeholder="••••••••"
               />
             </div>
@@ -151,7 +151,7 @@ const LoginPage = () => {
             <div className="flex items-center justify-between">
               <a
                 href="/forgot-password"
-                className="text-sm text-black font-medium hover:underline"
+                className="text-sm text-foreground font-medium hover:underline"
               >
                 Forgot password?
               </a>
@@ -160,26 +160,26 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full group relative px-6 py-3 bg-black text-white rounded-xl font-semibold
+              className="w-full group relative px-6 py-3 bg-primary text-primary-foreground rounded-xl font-semibold
                          shadow-lg hover:shadow-xl hover:-translate-y-0.5
                          active:translate-y-0 active:shadow-md
                          transition-all duration-200 
-                         focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2
+                         focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
                          disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0
-                         overflow-hidden"
+                         overflow-hidden hover-scale button-press"
             >
               <span className="relative z-10">
                 {loading ? "Signing in..." : "Sign in"}
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
             </button>
           </form>
 
-          <p className="text-center text-sm text-gray-600 mt-6">
+          <p className="text-center text-sm text-muted-foreground mt-6">
             Don&apos;t have an account?{" "}
             <a
               href="/sign-up"
-              className="text-black font-semibold hover:underline"
+              className="text-foreground font-semibold hover:underline"
             >
             </a>
           </p>
@@ -187,9 +187,9 @@ const LoginPage = () => {
 
         {/* Footer */}
         <div className="text-center mt-6 animate-in fade-in duration-1000">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             By signing in, you agree to our{" "}
-            <a href="#" className="text-black font-medium hover:underline">
+            <a href="#" className="text-foreground font-medium hover:underline">
               Terms of Service
             </a>
           </p>

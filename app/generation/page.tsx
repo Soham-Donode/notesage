@@ -338,33 +338,33 @@ export default function NoteSage() {
   }
 
   return (
-    <div className="h-screen w-full min-w-[800px] flex flex-col bg-white text-slate-900">
+    <div className="h-screen w-full min-w-[800px] flex flex-col bg-background text-foreground">
       <NavBar />
 
       <div className="flex flex-1 min-h-0">
-        <aside className="w-100 border-r border-slate-200 flex flex-col justify-between">
-         
-          <div className="p-4">
-            <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2">
-              <input
-                value={refactorText}
-                onChange={(e) => setRefactorText(e.target.value)}
-                placeholder="Refactor"
-                aria-label="Refactor prompt"
-                className="flex-1 bg-transparent outline-none h-15 text-sm"
-                disabled={loading}
-              />
-              <button
-                onClick={onRefactor}
-                disabled={!refactorText.trim() || loading}
-                aria-label="Refactor notes"
-                className="h-9 w-9 rounded-full bg-blue-500 text-white grid place-items-center hover:bg-blue-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ArrowRight size={20} />
-              </button>
-            </div>
-          </div>
-        </aside>
+  <aside className="w-100 border-r border-border flex flex-col justify-center bg-card h-full">
+  <div className="p-4 flex justify-center">
+    <div className="flex items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2 w-full max-w-sm">
+      <input
+        value={refactorText}
+        onChange={(e) => setRefactorText(e.target.value)}
+        placeholder="      Refactor"
+        aria-label="Refactor prompt"
+        className="flex-1 bg-transparent outline-none h-20 text-sm text-foreground placeholder-muted-foreground"
+        disabled={loading}
+      />
+      <button
+        onClick={onRefactor}
+        disabled={!refactorText.trim() || loading}
+        aria-label="Refactor notes"
+        className="h-9 w-9 rounded-full bg-primary text-primary-foreground grid place-items-center hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <ArrowRight size={20} />
+      </button>
+    </div>
+  </div>
+</aside>
+
 
         <main className="flex-1 overflow-auto p-6">
           {/* Action Buttons Header */}
@@ -373,7 +373,7 @@ export default function NoteSage() {
               onClick={handleSaveToNotes}
               disabled={loading || !markdown.trim() || saving}
               aria-label="Save to My Notes"
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-purple-500 text-white text-sm shadow hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-primary text-primary-foreground text-sm shadow hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
             >
               <span>{saving ? 'Saving...' : editingNoteId ? 'Update Note' : 'Save to My Notes'}</span>
             </button>
@@ -381,7 +381,7 @@ export default function NoteSage() {
               onClick={() => setShowPostModal(true)}
               disabled={loading || !markdown.trim()}
               aria-label="Post to Topic"
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-green-500 text-white text-sm shadow hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-green-500 text-primary-foreground text-sm shadow hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
             >
               <Share size={16} />
               <span>Post to Topic</span>
@@ -390,14 +390,14 @@ export default function NoteSage() {
               onClick={handleExport}
               disabled={loading || !markdown.trim()}
               aria-label="Export to PDF"
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-blue-500 text-white text-sm shadow hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition"
+              className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-blue-500 text-primary-foreground text-sm shadow hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
             >
               <Download size={16} />
               <span>Export to pdf</span>
             </button>
           </div>
 
-          <div className="relative rounded-2xl bg-slate-100 min-h-[72vh] p-4">
+          <div className="relative rounded-2xl bg-card min-h-[72vh] p-4 card-shadow">
             {loading ? (
               <div className="flex items-center justify-center h-[86vh]">
                 <p 
@@ -410,22 +410,28 @@ export default function NoteSage() {
               </div>
             ) : (
               <div className="space-y-3">
-                <div 
+                <div
                   ref={contentRef}
-                  className="prose prose-slate max-w-none bg-white p-4 rounded-xl"
+                  className=" bg-white max-w-none p-4 rounded-xl"
                 >
-                  <Editable
-                    editor={editor}
-                    value={markdown}
-                    onChange={(newMarkdown) => {
-                      setMarkdown(newMarkdown);
-                      // Persist direct edits to localStorage
-                      localStorage.setItem("notesData", JSON.stringify({ markdown: newMarkdown, timestamp: Date.now() }));
-                    }}
-                    placeholder="Your notes will appear here..."
-                    className="min-h-[68vh]"
-                    throttleInMs={1000}
-                  />
+                  {/* Keep the wysimark editor unstyled by our theme utilities.
+                      We wrap it in a transparent container so it doesn't inherit
+                      .text-card-foreground or .bg-card. The editor itself manages
+                      its own appearance. */}
+                  <div className="bg-transparent text-inherit">
+                    <Editable
+                      editor={editor}
+                      value={markdown}
+                      onChange={(newMarkdown) => {
+                        setMarkdown(newMarkdown);
+                        // Persist direct edits to localStorage
+                        localStorage.setItem("notesData", JSON.stringify({ markdown: newMarkdown, timestamp: Date.now() }));
+                      }}
+                      placeholder="Your notes will appear here..."
+                      className="min-h-[68vh] bg-transparent"
+                      throttleInMs={1000}
+                    />
+                  </div>
                 </div>
               </div>
             )}
