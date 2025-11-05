@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react';
-import { Bot, User, ArrowRight, Search, FileDown, Loader, Sparkles, NotebookText } from 'lucide-react';
+import { Bot, User, ArrowRight, FileDown, Loader, Sparkles } from 'lucide-react';
 
 // --- Type Definitions ---
 // Defines the structure for a single chat message.
