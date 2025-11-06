@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Pencil, Link as LinkIcon, ChevronRight } from "lucide-react";
+import { Pencil, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -101,14 +101,6 @@ export default function PromptBox({
               </div>
 
               <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  aria-label="Attach link"
-                  className="flex h-8 w-8 items-center justify-center rounded-md border border-input shadow-sm hover:bg-accent text-muted-foreground hover:text-accent-foreground hover-scale"
-                  disabled={!isLoaded}
-                >
-                  <LinkIcon size={14} />
-                </button>
                 <button
                   type="button"
                   onClick={handleGenerateClick}

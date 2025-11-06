@@ -15,7 +15,7 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen w-screen">
+    <div className="h-screen w-screen bg-gradient-to-br from-background to-muted">
       <header>
         <NavBar />
         <PromptBox onGenerate={handleGenerate} />

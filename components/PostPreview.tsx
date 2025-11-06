@@ -116,7 +116,7 @@ const PostPreview: React.FC<PostPreviewProps> = ({
           }}
           aria-hidden="true"
         >
-          <div className="bg-white p-3 h-full overflow-hidden">
+          <div className="bg-card p-3 h-full overflow-hidden">
             <ReactMarkdown components={{
               h1: ({children}) => <h1 className="text-lg font-bold mb-2 text-gray-900 leading-tight">{children}</h1>,
               h2: ({children}) => <h2 className="text-base font-semibold mb-2 text-gray-800 leading-tight">{children}</h2>,
@@ -138,41 +138,41 @@ const PostPreview: React.FC<PostPreviewProps> = ({
       )}
 
       {/* Main Post Preview */}
-      <div className="bg-white border border-gray-200 rounded-md hover:border-gray-300 transition-colors">
+      <div className="bg-white dark:bg-card border border-gray-200 dark:border-border rounded-md hover:border-gray-300 dark:hover:border-border transition-colors">
         <div className="flex">
           {/* Voting Section */}
-          <div className="flex flex-col items-center p-2 bg-gray-50 rounded-l-md min-w-[40px]">
+          <div className="flex flex-col items-center p-2 bg-gray-50 dark:bg-muted rounded-l-md min-w-[40px]">
             <button
               onClick={onUpvote}
-              className="p-1 hover:bg-orange-100 rounded transition-colors group"
+              className="p-1 hover:bg-orange-100 dark:hover:bg-orange-900/20 rounded transition-colors group"
               aria-label="Upvote"
             >
-              <ArrowUp className="w-4 h-4 text-gray-400 group-hover:text-orange-500" />
+              <ArrowUp className="w-4 h-4 text-gray-400 dark:text-muted-foreground group-hover:text-orange-500" />
             </button>
-            <span className="text-xs font-bold text-gray-700 py-1">
+            <span className="text-xs font-bold text-gray-700 dark:text-foreground py-1">
               {upvotes - downvotes || 0}
             </span>
             <button
               onClick={onDownvote}
-              className="p-1 hover:bg-blue-100 rounded transition-colors group"
+              className="p-1 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded transition-colors group"
               aria-label="Downvote"
             >
-              <ArrowDown className="w-4 h-4 text-gray-400 group-hover:text-blue-500" />
+              <ArrowDown className="w-4 h-4 text-gray-400 dark:text-muted-foreground group-hover:text-blue-500" />
             </button>
           </div>
 
           {/* Content Section */}
           <div className="flex-1 p-3">
             {/* Post Header */}
-            <div className="flex items-center text-xs text-gray-500 mb-2">
-              <span className="font-medium text-gray-700">Posted by u/{user}</span>
+            <div className="flex items-center text-xs text-gray-500 dark:text-muted-foreground mb-2">
+              <span className="font-medium text-gray-700 dark:text-foreground">Posted by u/{user}</span>
               <span className="mx-1">•</span>
               <span>{new Date(createdAt).toLocaleDateString()} at {new Date(createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
             </div>
 
             {/* Post Title */}
             <Link href={`/post/${id}`}>
-              <h3 className="text-lg font-medium text-gray-900 mb-2 leading-tight hover:text-blue-600 cursor-pointer">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-card-foreground mb-2 leading-tight hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer">
                 {title}
               </h3>
             </Link>
@@ -184,21 +184,21 @@ const PostPreview: React.FC<PostPreviewProps> = ({
                   <img 
                     src={snapshotUrl} 
                     alt="Post content preview" 
-                    className="w-full h-32 object-cover rounded border border-gray-200 shadow-sm"
+                    className="w-full h-32 object-cover rounded border border-border shadow-sm"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-white/60 to-transparent rounded pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-card/60 to-transparent rounded pointer-events-none"></div>
                 </div>
               ) : isGeneratingSnapshot ? (
-                <div className="w-full h-32 bg-gray-100 rounded border border-gray-200 flex items-center justify-center">
-                  <div className="flex items-center text-gray-500 text-sm">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400 mr-2"></div>
+                <div className="w-full h-32 bg-muted rounded border border-border flex items-center justify-center">
+                  <div className="flex items-center text-muted-foreground text-sm">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2"></div>
                     Generating preview...
                   </div>
                 </div>
               ) : (
-                <div className="w-full h-32 bg-gray-50 rounded border border-gray-200 p-3">
-                  <div className="prose prose-sm max-w-none text-gray-800 line-clamp-3">
+                <div className="w-full h-32 bg-gray-50 dark:bg-muted rounded border border-gray-200 dark:border-border p-3">
+                  <div className="prose prose-sm max-w-none text-gray-800 dark:text-card-foreground line-clamp-3">
                     <ReactMarkdown components={{
                       p: ({children}) => <p className="mb-2 text-sm leading-relaxed">{children}</p>,
                       h1: ({children}) => <h1 className="text-base font-semibold mb-2">{children}</h1>,
@@ -207,9 +207,9 @@ const PostPreview: React.FC<PostPreviewProps> = ({
                       ul: ({children}) => <ul className="mb-2 ml-4 text-sm">{children}</ul>,
                       ol: ({children}) => <ol className="mb-2 ml-4 text-sm">{children}</ol>,
                       li: ({children}) => <li className="mb-1 text-sm">{children}</li>,
-                      code: ({children}) => <code className="bg-gray-100 px-1 py-0.5 rounded text-xs font-mono">{children}</code>,
-                      pre: ({children}) => <pre className="bg-gray-100 p-2 rounded text-xs font-mono overflow-x-auto mb-2">{children}</pre>,
-                      blockquote: ({children}) => <blockquote className="border-l-2 border-gray-300 pl-3 italic text-sm text-gray-600 mb-2">{children}</blockquote>,
+                      code: ({children}) => <code className="bg-muted px-1 py-0.5 rounded text-xs font-mono">{children}</code>,
+                      pre: ({children}) => <pre className="bg-muted p-2 rounded text-xs font-mono overflow-x-auto mb-2">{children}</pre>,
+                      blockquote: ({children}) => <blockquote className="border-l-2 border-border pl-3 italic text-sm text-muted-foreground mb-2">{children}</blockquote>,
                     }}>
                       {content}
                     </ReactMarkdown>
@@ -219,15 +219,15 @@ const PostPreview: React.FC<PostPreviewProps> = ({
             </div>
 
             {/* Post Footer */}
-            <div className="flex items-center text-xs text-gray-500">
-              <button className="flex items-center hover:bg-gray-100 px-2 py-1 rounded transition-colors">
+            <div className="flex items-center text-xs text-gray-500 dark:text-muted-foreground">
+              <button className="flex items-center hover:bg-gray-100 dark:hover:bg-muted px-2 py-1 rounded transition-colors">
                 <MessageCircle className="w-4 h-4 mr-1" />
                 <span>{commentCount} comments</span>
               </button>
               {!isExpanded && content.length > 200 && (
                 <button
                   onClick={() => setIsExpanded(true)}
-                  className="ml-2 hover:bg-gray-100 px-2 py-1 rounded transition-colors text-blue-600"
+                  className="ml-2 hover:bg-gray-100 dark:hover:bg-muted px-2 py-1 rounded transition-colors text-blue-600 dark:text-blue-400"
                 >
                   Continue reading
                 </button>
@@ -235,7 +235,7 @@ const PostPreview: React.FC<PostPreviewProps> = ({
               {isExpanded && (
                 <button
                   onClick={() => setIsExpanded(false)}
-                  className="ml-2 hover:bg-gray-100 px-2 py-1 rounded transition-colors text-blue-600"
+                  className="ml-2 hover:bg-gray-100 dark:hover:bg-muted px-2 py-1 rounded transition-colors text-blue-600 dark:text-blue-400"
                 >
                   Show less
                 </button>

@@ -373,7 +373,7 @@ export default function NoteSage() {
               onClick={handleSaveToNotes}
               disabled={loading || !markdown.trim() || saving}
               aria-label="Save to My Notes"
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-primary text-primary-foreground text-sm shadow hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
+              className="inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-cyan-500/90 text-white text-sm border border-cyan-600 shadow hover:bg-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
             >
               <span>{saving ? 'Saving...' : editingNoteId ? 'Update Note' : 'Save to My Notes'}</span>
             </button>
@@ -381,7 +381,7 @@ export default function NoteSage() {
               onClick={() => setShowPostModal(true)}
               disabled={loading || !markdown.trim()}
               aria-label="Post to Topic"
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-green-500 text-primary-foreground text-sm shadow hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
+              className="inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-purple-500/90 text-white text-sm shadow border border-purple-600  hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
             >
               <Share size={16} />
               <span>Post to Topic</span>
@@ -390,7 +390,7 @@ export default function NoteSage() {
               onClick={handleExport}
               disabled={loading || !markdown.trim()}
               aria-label="Export to PDF"
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-blue-500 text-primary-foreground text-sm shadow hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
+              className="inline-flex items-center gap-2 rounded-xl px-4 py-2 bg-blue-500/90 text-white text-sm shadow border border-blue-600 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
             >
               <Download size={16} />
               <span>Export to pdf</span>
@@ -449,18 +449,18 @@ export default function NoteSage() {
       {/* Post to Topic Modal */}
       {showPostModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[80vh] overflow-hidden">
-            <div className="p-6 border-b border-gray-200">
+          <div className="bg-card rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[80vh] overflow-hidden border border-border">
+            <div className="p-6 border-b border-border">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900">Post Notes to Topic</h2>
+                <h2 className="text-2xl font-bold text-card-foreground">Post Notes to Topic</h2>
                 <button
                   onClick={() => setShowPostModal(false)}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className="p-2 hover:bg-muted rounded-full transition-colors"
                 >
-                  <span className="text-2xl text-gray-400">×</span>
+                  <span className="text-2xl text-muted-foreground">×</span>
                 </button>
               </div>
-              <p className="text-gray-600 mt-2">Choose a topic to share your generated notes with the community</p>
+              <p className="text-muted-foreground mt-2">Choose a topic to share your generated notes with the community</p>
             </div>
 
             <div className="p-6 overflow-y-auto max-h-[60vh]">
@@ -470,17 +470,17 @@ export default function NoteSage() {
                     key={topic.slug}
                     onClick={() => handlePostToTopic(topic.slug)}
                     disabled={posting}
-                    className="p-4 border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-md transition-all duration-200 text-left disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-4 border border-border rounded-xl hover:border-primary/50 hover:shadow-md transition-all duration-200 text-left disabled:opacity-50 disabled:cursor-not-allowed bg-card hover:bg-muted/50"
                   >
                     <div className="flex items-start space-x-3">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span className="text-white font-bold text-lg">
+                      <div className="w-12 h-12 bg-gradient-to-r from-primary to-primary/80 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-primary-foreground font-bold text-lg">
                           {topic.name.charAt(0)}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900 mb-1">{topic.name}</h3>
-                        <p className="text-sm text-gray-600 line-clamp-2">{topic.description}</p>
+                        <h3 className="font-semibold text-card-foreground mb-1">{topic.name}</h3>
+                        <p className="text-sm text-muted-foreground line-clamp-2">{topic.description}</p>
                       </div>
                     </div>
                   </button>
@@ -489,10 +489,10 @@ export default function NoteSage() {
             </div>
 
             {posting && (
-              <div className="p-4 border-t border-gray-200 bg-gray-50">
+              <div className="p-4 border-t border-border bg-muted">
                 <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mr-3"></div>
-                  <span className="text-gray-700">Posting your notes...</span>
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mr-3"></div>
+                  <span className="text-card-foreground">Posting your notes...</span>
                 </div>
               </div>
             )}

@@ -7,6 +7,7 @@ import { NavBar } from '@/components/NavBar';
 import PostPreview from '@/components/PostPreview';
 import PostForm from '@/components/PostForm';
 import { ArrowLeft } from 'lucide-react';
+import { useTheme } from '@/components/ThemeProvider';
 
 const topics = [
 	{
@@ -80,6 +81,7 @@ const TopicPage = () => {
 	const [posts, setPosts] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [isPostFormOpen, setIsPostFormOpen] = useState(false);
+	const { theme } = useTheme();
 
 	const topic = topics.find((t) => t.slug === slug);
 
@@ -163,20 +165,20 @@ const TopicPage = () => {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+		<div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-background dark:to-muted">
 			<NavBar />
 			<div className="container mx-auto px-4 py-8">
 				<Link
 					href="/explore"
-					className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors"
+					className="inline-flex items-center text-gray-600 dark:text-muted-foreground hover:text-gray-900 dark:hover:text-foreground mb-6 transition-colors"
 				>
 					<ArrowLeft className="w-5 h-5 mr-2" />
 					Back to Explore
 				</Link>
 
 				<div className="mb-12 text-center">
-					<h1 className="text-5xl font-bold text-gray-900 mb-4">{topic.name}</h1>
-					<p className="text-xl text-gray-600 max-w-2xl mx-auto">
+					<h1 className="text-5xl font-bold text-gray-900 dark:text-foreground mb-4">{topic.name}</h1>
+					<p className="text-xl text-gray-600 dark:text-muted-foreground max-w-2xl mx-auto">
 						{topic.description}
 					</p>
 				</div>
@@ -184,7 +186,7 @@ const TopicPage = () => {
 				<div className="mb-8 flex justify-center">
 					<button
 						onClick={() => setIsPostFormOpen(true)}
-						className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+						className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 hover-scale"
 					>
 						✏️ Share Your Knowledge
 					</button>
@@ -193,8 +195,8 @@ const TopicPage = () => {
 				<div className="max-w-4xl mx-auto">
 					{loading ? (
 						<div className="text-center py-12">
-							<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-							<p className="text-gray-600">Loading posts...</p>
+							<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary dark:border-primary mx-auto mb-4"></div>
+							<p className="text-gray-600 dark:text-muted-foreground">Loading posts...</p>
 						</div>
 					) : posts.length > 0 ? (
 						<div className="space-y-4">
@@ -215,17 +217,17 @@ const TopicPage = () => {
 							))}
 						</div>
 					) : (
-						<div className="text-center py-16 bg-white rounded-2xl shadow-lg">
+						<div className="text-center py-16 bg-white dark:bg-card rounded-2xl shadow-lg">
 							<div className="text-6xl mb-4">📚</div>
-							<h3 className="text-2xl font-bold text-gray-900 mb-2">
+							<h3 className="text-2xl font-bold text-gray-900 dark:text-card-foreground mb-2">
 								No posts yet
 							</h3>
-							<p className="text-gray-600 mb-6">
+							<p className="text-gray-600 dark:text-muted-foreground mb-6">
 								Be the first to share knowledge in this topic!
 							</p>
 							<button
 								onClick={() => setIsPostFormOpen(true)}
-								className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+								className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
 							>
 								Create First Post
 							</button>
