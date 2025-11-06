@@ -418,7 +418,7 @@ export default function NoteSage() {
                       We wrap it in a transparent container so it doesn't inherit
                       .text-card-foreground or .bg-card. The editor itself manages
                       its own appearance. */}
-                  <div className="bg-transparent text-inherit">
+                  <div className="bg-white text-inherit">
                     <Editable
                       editor={editor}
                       value={markdown}

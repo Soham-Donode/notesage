@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react';
 import { Bot, User, ArrowRight, FileDown, Loader, Sparkles } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 // --- Type Definitions ---
 // Defines the structure for a single chat message.
@@ -171,9 +172,26 @@ const App: React.FC = () => {
                     </div>
                     <div className="bg-card p-4 sm:p-6 md:p-8 lg:p-12 rounded-2xl shadow-lg border border-border min-h-[60vh] sm:min-h-[70vh]">
                         {generatedNotes ? (
-                            <article className="prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl max-w-none text-card-foreground">
-                                <div dangerouslySetInnerHTML={{ __html: generatedNotes.replace(/\n/g, '<br />') }} />
-                            </article>
+                            <div className="prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl max-w-none prose-headings:text-card-foreground prose-p:text-card-foreground prose-strong:text-card-foreground prose-code:text-card-foreground prose-pre:bg-muted prose-pre:border prose-pre:border-border prose-blockquote:text-muted-foreground prose-blockquote:border-l-primary">
+                                <ReactMarkdown
+                                    components={{
+                                        h1: ({ children }) => <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-card-foreground mb-4 mt-6 first:mt-0">{children}</h1>,
+                                        h2: ({ children }) => <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-card-foreground mb-3 mt-5">{children}</h2>,
+                                        h3: ({ children }) => <h3 className="text-base sm:text-lg lg:text-xl font-medium text-card-foreground mb-2 mt-4">{children}</h3>,
+                                        p: ({ children }) => <p className="text-card-foreground mb-4 leading-relaxed">{children}</p>,
+                                        ul: ({ children }) => <ul className="text-card-foreground mb-4 ml-6 list-disc space-y-1">{children}</ul>,
+                                        ol: ({ children }) => <ol className="text-card-foreground mb-4 ml-6 list-decimal space-y-1">{children}</ol>,
+                                        li: ({ children }) => <li className="text-card-foreground">{children}</li>,
+                                        code: ({ children }) => <code className="bg-muted text-card-foreground px-2 py-1 rounded text-sm font-mono">{children}</code>,
+                                        pre: ({ children }) => <pre className="bg-muted border border-border p-4 rounded-lg overflow-x-auto mb-4 text-card-foreground">{children}</pre>,
+                                        blockquote: ({ children }) => <blockquote className="border-l-4 border-primary pl-4 italic text-muted-foreground mb-4">{children}</blockquote>,
+                                        strong: ({ children }) => <strong className="font-semibold text-card-foreground">{children}</strong>,
+                                        em: ({ children }) => <em className="italic text-card-foreground">{children}</em>,
+                                    }}
+                                >
+                                    {generatedNotes}
+                                </ReactMarkdown>
+                            </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground py-8 sm:py-12">
                                 <Sparkles className="w-12 h-12 sm:w-16 sm:h-16 mb-4 text-muted-foreground/50" />

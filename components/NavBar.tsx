@@ -95,66 +95,68 @@ export function NavBar({ onSearchClick }: NavBarProps) {
         </Button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute top-[70px] left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border shadow-lg z-50">
-          <div className="px-4 py-4 space-y-4">
-            {/* Mobile Search */}
-            <button
-              onClick={() => {
-                onSearchClick?.();
-                setIsMobileMenuOpen(false);
-              }}
-              className="flex items-center w-full bg-muted px-4 py-3 rounded-xl border border-border hover:border-primary/50 transition-colors"
-            >
-              <Search size={16} className="mr-3 text-muted-foreground" />
-              <span className="text-muted-foreground text-sm">Search notes and posts...</span>
-            </button>
+        <div className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50" onClick={() => setIsMobileMenuOpen(false)}>
+          <div className="absolute top-[70px] left-0 right-0 bg-card border-b border-border shadow-lg">
+            <div className="px-4 py-6 space-y-6">
+              {/* Mobile Search */}
+              <button
+                onClick={() => {
+                  onSearchClick?.();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="flex items-center w-full bg-muted px-4 py-3 rounded-xl border border-border hover:border-primary/50 transition-colors"
+              >
+                <Search size={16} className="mr-3 text-muted-foreground" />
+                <span className="text-muted-foreground text-sm">Search notes and posts...</span>
+              </button>
 
-            {/* Mobile Navigation */}
-            <div className="space-y-2">
-              <Link
-                href="/"
-                className="block px-4 py-2 text-muted-foreground hover:text-primary hover:bg-muted rounded-lg transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
-                href="/explore"
-                className="block px-4 py-2 text-muted-foreground hover:text-primary hover:bg-muted rounded-lg transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Explore
-              </Link>
-              <Link
-                href="/mynotes"
-                className="block px-4 py-2 text-muted-foreground hover:text-primary hover:bg-muted rounded-lg transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                My Notes
-              </Link>
-            </div>
-
-            {/* Mobile Auth */}
-            {!isLoggedIn && (
-              <div className="flex gap-2 pt-2 border-t border-border">
+              {/* Mobile Navigation */}
+              <div className="space-y-2">
                 <Link
-                  href="/signup"
-                  className="flex-1 text-center rounded-xl border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-200"
+                  href="/"
+                  className="block px-4 py-3 text-muted-foreground hover:text-primary hover:bg-muted rounded-lg transition-colors text-base font-medium"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Sign Up
+                  Home
                 </Link>
                 <Link
-                  href="/login"
-                  className="flex-1 text-center rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-all duration-200"
+                  href="/explore"
+                  className="block px-4 py-3 text-muted-foreground hover:text-primary hover:bg-muted rounded-lg transition-colors text-base font-medium"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Sign In
+                  Explore
+                </Link>
+                <Link
+                  href="/mynotes"
+                  className="block px-4 py-3 text-muted-foreground hover:text-primary hover:bg-muted rounded-lg transition-colors text-base font-medium"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  My Notes
                 </Link>
               </div>
-            )}
+
+              {/* Mobile Auth */}
+              {!isLoggedIn && (
+                <div className="flex gap-3 pt-4 border-t border-border">
+                  <Link
+                    href="/signup"
+                    className="flex-1 text-center rounded-xl border border-border bg-background px-4 py-3 text-sm font-semibold text-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-200"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="flex-1 text-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-all duration-200"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

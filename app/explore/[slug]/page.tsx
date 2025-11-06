@@ -186,7 +186,7 @@ const TopicPage = () => {
 				<div className="mb-6 sm:mb-8 flex justify-center">
 					<button
 						onClick={() => setIsPostFormOpen(true)}
-						className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 hover-scale text-sm sm:text-base"
+						className="border border-white/50 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 hover-scale text-sm sm:text-base"
 					>
 						✏️ Share Your Knowledge
 					</button>
