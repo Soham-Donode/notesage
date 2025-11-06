@@ -6,7 +6,11 @@ import Link from "next/link";
 import { Button } from "./ui/button"; // Optional: Reuse if needed for other buttons
 import { useTheme } from "./ThemeProvider";
 
-export function NavBar() {
+interface NavBarProps {
+  onSearchClick?: () => void;
+}
+
+export function NavBar({ onSearchClick }: NavBarProps) {
   const { userId } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const isLoggedIn = Boolean(userId);
@@ -37,28 +41,30 @@ export function NavBar() {
         >
           {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
         </Button>
-        <div className="flex items-center bg-muted px-4 w-[250px] py-2 rounded-xl border border-border hover:border-primary/50 transition-colors">
+        <button
+          onClick={onSearchClick}
+          className="flex items-center bg-muted px-4 w-[250px] py-2 rounded-xl border border-border hover:border-primary/50 transition-colors cursor-text"
+        >
           <Search size={18} className="mr-3 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search notes and posts..."
-            className="bg-transparent outline-none border-none w-full text-foreground placeholder-muted-foreground text-sm"
-          />
-        </div>
+          <span className="text-muted-foreground text-sm">Search notes and posts...</span>
+          <kbd className="ml-auto text-xs text-muted-foreground bg-background px-1.5 py-0.5 rounded border">
+            ⌘K
+          </kbd>
+        </button>
         {isLoggedIn ? (
           <UserButton />
         ) : (
           <div className="flex gap-3">
-           
+
               <Link href="/signup"className="inline-block rounded-xl border border-border bg-background px-6 py-2 text-sm font-semibold text-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-200 shadow-sm hover:shadow-md hover-scale">
                 Sign Up
               </Link>
-            
-           
+
+
               <Link href="/login" className="inline-block rounded-xl bg-primary px-6 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-all duration-200 shadow-lg hover:shadow-xl hover-scale button-press">
                 Sign In
               </Link>
-       
+
           </div>
         )}
       </div>
