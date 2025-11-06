@@ -138,29 +138,29 @@ const PostPreview: React.FC<PostPreviewProps> = ({
       )}
 
       {/* Main Post Preview */}
-      <div className="bg-white dark:bg-card border border-gray-200 dark:border-border rounded-md hover:border-gray-300 dark:hover:border-border transition-colors">
+      <div className="bg-white dark:bg-card border border-gray-200 dark:border-border rounded-md hover:border-gray-300 dark:hover:border-border transition-colors overflow-hidden">
         {/* Mobile Voting Section - Top */}
-        <div className="md:hidden flex items-center justify-between p-3 border-b border-gray-100 dark:border-border">
-          <div className="flex items-center gap-2">
+        <div className="md:hidden flex items-center justify-between p-3 border-b border-gray-100 dark:border-border overflow-hidden">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={onUpvote}
-              className="p-1 hover:bg-orange-100 dark:hover:bg-orange-900/20 rounded transition-colors group"
+              className="p-1 hover:bg-orange-100 dark:hover:bg-orange-900/20 rounded transition-colors group flex-shrink-0"
               aria-label="Upvote"
             >
               <ArrowUp className="w-4 h-4 text-gray-400 dark:text-muted-foreground group-hover:text-orange-500" />
             </button>
-            <span className="text-sm font-bold text-gray-700 dark:text-foreground">
+            <span className="text-sm font-bold text-gray-700 dark:text-foreground min-w-0">
               {upvotes - downvotes || 0}
             </span>
             <button
               onClick={onDownvote}
-              className="p-1 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded transition-colors group"
+              className="p-1 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded transition-colors group flex-shrink-0"
               aria-label="Downvote"
             >
               <ArrowDown className="w-4 h-4 text-gray-400 dark:text-muted-foreground group-hover:text-blue-500" />
             </button>
           </div>
-          <div className="flex items-center text-xs text-gray-500 dark:text-muted-foreground">
+          <div className="flex items-center text-xs text-gray-500 dark:text-muted-foreground flex-shrink-0">
             <MessageCircle className="w-3 h-3 mr-1" />
             <span>{commentCount}</span>
           </div>
@@ -168,20 +168,20 @@ const PostPreview: React.FC<PostPreviewProps> = ({
 
         <div className="flex">
           {/* Desktop Voting Section */}
-          <div className="hidden md:flex flex-col items-center p-2 bg-gray-50 dark:bg-muted rounded-l-md min-w-[40px]">
+          <div className="hidden md:flex flex-col items-center p-2 bg-gray-50 dark:bg-muted rounded-l-md min-w-[40px] flex-shrink-0">
             <button
               onClick={onUpvote}
-              className="p-1 hover:bg-orange-100 dark:hover:bg-orange-900/20 rounded transition-colors group"
+              className="p-1 hover:bg-orange-100 dark:hover:bg-orange-900/20 rounded transition-colors group flex-shrink-0"
               aria-label="Upvote"
             >
               <ArrowUp className="w-4 h-4 text-gray-400 dark:text-muted-foreground group-hover:text-orange-500" />
             </button>
-            <span className="text-xs font-bold text-gray-700 dark:text-foreground py-1">
+            <span className="text-xs font-bold text-gray-700 dark:text-foreground py-1 min-w-0">
               {upvotes - downvotes || 0}
             </span>
             <button
               onClick={onDownvote}
-              className="p-1 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded transition-colors group"
+              className="p-1 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded transition-colors group flex-shrink-0"
               aria-label="Downvote"
             >
               <ArrowDown className="w-4 h-4 text-gray-400 dark:text-muted-foreground group-hover:text-blue-500" />
@@ -189,17 +189,17 @@ const PostPreview: React.FC<PostPreviewProps> = ({
           </div>
 
           {/* Content Section */}
-          <div className="flex-1 p-3 md:p-3">
+          <div className="flex-1 p-3 md:p-3 min-w-0 overflow-hidden">
             {/* Post Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center text-xs text-gray-500 dark:text-muted-foreground mb-2 gap-1 sm:gap-0">
-              <span className="font-medium text-gray-700 dark:text-foreground">Posted by u/{user}</span>
+            <div className="flex flex-col sm:flex-row sm:items-center text-xs text-gray-500 dark:text-muted-foreground mb-2 gap-1 sm:gap-0 min-w-0">
+              <span className="font-medium text-gray-700 dark:text-foreground truncate">Posted by u/{user}</span>
               <span className="hidden sm:inline mx-1">•</span>
-              <span className="sm:inline">{new Date(createdAt).toLocaleDateString()} at {new Date(createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+              <span className="sm:inline truncate">{new Date(createdAt).toLocaleDateString()} at {new Date(createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
             </div>
 
             {/* Post Title */}
             <Link href={`/post/${id}`}>
-              <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-card-foreground mb-2 leading-tight hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer">
+              <h3 className="text-base md:text-lg font-medium text-gray-900 dark:text-card-foreground mb-2 leading-tight hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer break-words hyphens-auto">
                 {title}
               </h3>
             </Link>
@@ -207,11 +207,11 @@ const PostPreview: React.FC<PostPreviewProps> = ({
             {/* Post Content Preview */}
             <div className="mb-3">
               {snapshotUrl && snapshotUrl !== 'fallback' ? (
-                <div className="relative">
+                <div className="relative w-full h-24 sm:h-32 overflow-hidden rounded border border-border shadow-sm">
                   <img
                     src={snapshotUrl}
                     alt="Post content preview"
-                    className="w-full h-24 sm:h-32 object-cover rounded border border-border shadow-sm"
+                    className="w-full h-full object-cover object-top"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-card/60 to-transparent rounded pointer-events-none"></div>
@@ -224,19 +224,19 @@ const PostPreview: React.FC<PostPreviewProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="w-full h-24 sm:h-32 bg-gray-50 dark:bg-muted rounded border border-gray-200 dark:border-border p-2 sm:p-3">
-                  <div className="prose prose-sm max-w-none text-gray-800 dark:text-card-foreground line-clamp-3 text-xs sm:text-sm">
+                <div className="w-full h-24 sm:h-32 bg-gray-50 dark:bg-muted rounded border border-gray-200 dark:border-border p-2 sm:p-3 overflow-hidden">
+                  <div className="prose prose-sm max-w-none text-gray-800 dark:text-card-foreground line-clamp-3 text-xs sm:text-sm overflow-hidden">
                     <ReactMarkdown components={{
-                      p: ({children}) => <p className="mb-1 sm:mb-2 text-xs sm:text-sm leading-relaxed">{children}</p>,
-                      h1: ({children}) => <h1 className="text-sm sm:text-base font-semibold mb-1 sm:mb-2">{children}</h1>,
-                      h2: ({children}) => <h2 className="text-xs sm:text-sm font-semibold mb-1 sm:mb-2">{children}</h2>,
-                      h3: ({children}) => <h3 className="text-xs sm:text-sm font-medium mb-1 sm:mb-2">{children}</h3>,
-                      ul: ({children}) => <ul className="mb-1 sm:mb-2 ml-3 sm:ml-4 text-xs sm:text-sm">{children}</ul>,
-                      ol: ({children}) => <ol className="mb-1 sm:mb-2 ml-3 sm:ml-4 text-xs sm:text-sm">{children}</ol>,
-                      li: ({children}) => <li className="mb-1 text-xs sm:text-sm">{children}</li>,
-                      code: ({children}) => <code className="bg-muted px-1 py-0.5 rounded text-xs font-mono">{children}</code>,
-                      pre: ({children}) => <pre className="bg-muted p-1 sm:p-2 rounded text-xs font-mono overflow-x-auto mb-1 sm:mb-2">{children}</pre>,
-                      blockquote: ({children}) => <blockquote className="border-l-2 border-border pl-2 sm:pl-3 italic text-xs sm:text-sm text-muted-foreground mb-1 sm:mb-2">{children}</blockquote>,
+                      p: ({children}) => <p className="mb-1 sm:mb-2 text-xs sm:text-sm leading-relaxed break-words">{children}</p>,
+                      h1: ({children}) => <h1 className="text-sm sm:text-base font-semibold mb-1 sm:mb-2 break-words">{children}</h1>,
+                      h2: ({children}) => <h2 className="text-xs sm:text-sm font-semibold mb-1 sm:mb-2 break-words">{children}</h2>,
+                      h3: ({children}) => <h3 className="text-xs sm:text-sm font-medium mb-1 sm:mb-2 break-words">{children}</h3>,
+                      ul: ({children}) => <ul className="mb-1 sm:mb-2 ml-3 sm:ml-4 text-xs sm:text-sm break-words">{children}</ul>,
+                      ol: ({children}) => <ol className="mb-1 sm:mb-2 ml-3 sm:ml-4 text-xs sm:text-sm break-words">{children}</ol>,
+                      li: ({children}) => <li className="mb-1 text-xs sm:text-sm break-words">{children}</li>,
+                      code: ({children}) => <code className="bg-muted px-1 py-0.5 rounded text-xs font-mono break-words overflow-hidden">{children}</code>,
+                      pre: ({children}) => <pre className="bg-muted p-1 sm:p-2 rounded text-xs font-mono overflow-x-auto mb-1 sm:mb-2 break-words whitespace-pre-wrap max-w-full">{children}</pre>,
+                      blockquote: ({children}) => <blockquote className="border-l-2 border-border pl-2 sm:pl-3 italic text-xs sm:text-sm text-muted-foreground mb-1 sm:mb-2 break-words">{children}</blockquote>,
                     }}>
                       {content}
                     </ReactMarkdown>

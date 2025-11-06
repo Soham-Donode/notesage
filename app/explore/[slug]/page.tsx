@@ -192,14 +192,14 @@ const TopicPage = () => {
 					</button>
 				</div>
 
-				<div className="max-w-4xl mx-auto">
+				<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 					{loading ? (
 						<div className="text-center py-8 sm:py-12">
 							<div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-primary mx-auto mb-4 transition-colors duration-300"></div>
 							<p className="text-muted-foreground transition-colors duration-300">Loading posts...</p>
 						</div>
 					) : posts.length > 0 ? (
-						<div className="space-y-3 sm:space-y-4">
+						<div className="space-y-3 sm:space-y-4 lg:space-y-6">
 							{posts.map((post: any) => (
 								<PostPreview
 									key={post._id}

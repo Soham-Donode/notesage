@@ -102,6 +102,15 @@ export default function NoteSage() {
     setMounted(true);
   }, []);
 
+  // Clean up edit note data when component unmounts or when editing is complete
+  useEffect(() => {
+    return () => {
+      if (editingNoteId) {
+        localStorage.removeItem('editNote');
+      }
+    };
+  }, [editingNoteId]);
+
   useEffect(() => {
     if (!mounted) return;
 
@@ -140,13 +149,13 @@ export default function NoteSage() {
             const note = JSON.parse(editNoteData);
             setMarkdown(note.content);
             setEditingNoteId(note._id);
-            localStorage.removeItem('editNote'); // Clean up
+            // Don't remove editNote data here - let it persist until save/cancel
           } catch (error) {
             console.error('Error parsing edit note data:', error);
           }
         }
 
-        // Check for stored notes data
+        // Check for stored notes data (only if not editing)
         const stored = localStorage.getItem("notesData");
         if (stored && !editNoteData) {
           try {
@@ -155,7 +164,7 @@ export default function NoteSage() {
           } catch (error) {
             console.error("Error parsing stored notes:", error);
           }
-        } else {
+        } else if (!editNoteData) {
           setMarkdown(`# Generated Notes
 
 **Key concept 1:** …
@@ -316,6 +325,7 @@ export default function NoteSage() {
         alert(editingNoteId ? 'Note updated successfully!' : 'Notes saved successfully!');
         if (editingNoteId) {
           setEditingNoteId(null);
+          localStorage.removeItem('editNote'); // Clean up after successful save
         }
       } else {
         const error = await response.json();
@@ -368,33 +378,59 @@ export default function NoteSage() {
 
         <main className="flex-1 overflow-auto p-4 md:p-6">
           {/* Action Buttons Header */}
-          <div className="mb-4 flex flex-wrap justify-end gap-2 md:gap-3">
-            <button
-              onClick={handleSaveToNotes}
-              disabled={loading || !markdown.trim() || saving}
-              aria-label="Save to My Notes"
-              className="inline-flex items-center gap-2 rounded-xl px-3 md:px-4 py-2 bg-cyan-500/90 text-white text-xs md:text-sm border border-cyan-600 shadow hover:bg-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
-            >
-              <span>{saving ? 'Saving...' : editingNoteId ? 'Update Note' : 'Save to My Notes'}</span>
-            </button>
-            <button
-              onClick={() => setShowPostModal(true)}
-              disabled={loading || !markdown.trim()}
-              aria-label="Post to Topic"
-              className="inline-flex items-center gap-2 rounded-xl px-3 md:px-4 py-2 bg-purple-500/90 text-white text-xs md:text-sm shadow border border-purple-600  hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
-            >
-              <Share size={14} />
-              <span>Post to Topic</span>
-            </button>
-            <button
-              onClick={handleExport}
-              disabled={loading || !markdown.trim()}
-              aria-label="Export to PDF"
-              className="inline-flex items-center gap-2 rounded-xl px-3 md:px-4 py-2 bg-blue-500/90 text-white text-xs md:text-sm shadow border border-blue-600 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
-            >
-              <Download size={14} />
-              <span>Export to pdf</span>
-            </button>
+          <div className="mb-4 flex flex-wrap justify-between items-center gap-2 md:gap-3">
+            {editingNoteId && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Editing note...</span>
+                <button
+                  onClick={() => {
+                    setEditingNoteId(null);
+                    localStorage.removeItem('editNote');
+                    setMarkdown(`# Generated Notes
+
+**Key concept 1:** …
+
+**Key concept 2:** …
+
+- Bulleted summary …
+- Another point …
+
+*Action items:* …`);
+                  }}
+                  className="text-xs text-muted-foreground hover:text-foreground underline"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+            <div className="flex flex-wrap gap-2 md:gap-3 ml-auto">
+              <button
+                onClick={handleSaveToNotes}
+                disabled={loading || !markdown.trim() || saving}
+                aria-label="Save to My Notes"
+                className="inline-flex items-center gap-2 rounded-xl px-3 md:px-4 py-2 bg-cyan-500/90 text-white text-xs md:text-sm border border-cyan-600 shadow hover:bg-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
+              >
+                <span>{saving ? 'Saving...' : editingNoteId ? 'Update Note' : 'Save to My Notes'}</span>
+              </button>
+              <button
+                onClick={() => setShowPostModal(true)}
+                disabled={loading || !markdown.trim()}
+                aria-label="Post to Topic"
+                className="inline-flex items-center gap-2 rounded-xl px-3 md:px-4 py-2 bg-purple-500/90 text-white text-xs md:text-sm shadow border border-purple-600  hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
+              >
+                <Share size={14} />
+                <span>Post to Topic</span>
+              </button>
+              <button
+                onClick={handleExport}
+                disabled={loading || !markdown.trim()}
+                aria-label="Export to PDF"
+                className="inline-flex items-center gap-2 rounded-xl px-3 md:px-4 py-2 bg-blue-500/90 text-white text-xs md:text-sm shadow border border-blue-600 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
+              >
+                <Download size={14} />
+                <span>Export to pdf</span>
+              </button>
+            </div>
           </div>
 
           <div className="relative rounded-2xl bg-card min-h-[60vh] md:min-h-[72vh] p-3 md:p-4 card-shadow">
@@ -412,13 +448,13 @@ export default function NoteSage() {
               <div className="space-y-3">
                 <div
                   ref={contentRef}
-                  className=" bg-card max-w-none p-3 md:p-4 rounded-xl"
+                  className=" bg-card max-w-none p-3 md:p-4 rounded-4xl"
                 >
                   {/* Keep the wysimark editor unstyled by our theme utilities.
                       We wrap it in a transparent container so it doesn't inherit
                       .text-card-foreground or .bg-card. The editor itself manages
                       its own appearance. */}
-                  <div className="bg-white text-inherit">
+                  <div className="bg-white text-inherit ">
                     <Editable
                       editor={editor}
                       value={markdown}
