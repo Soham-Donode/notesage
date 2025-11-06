@@ -166,18 +166,18 @@ const PostPage = () => {
 
         <div className="max-w-4xl mx-auto">
           {/* Post Content */}
-          <div className="bg-card border border-border rounded-md mb-6">
-            <div className="flex">
+          <div className="bg-card border border-border rounded-md mb-4 md:mb-6">
+            <div className="flex flex-col md:flex-row">
               {/* Voting Section */}
-              <div className="flex flex-col items-center p-3 bg-muted rounded-l-md min-w-[50px]">
+              <div className="flex md:flex-col items-center justify-center p-3 bg-muted rounded-t-md md:rounded-l-md md:rounded-t-none min-h-[50px] md:min-w-[50px] border-b md:border-b-0 md:border-r border-border">
                 <button
                   onClick={() => handleVote('upvote')}
                   className="p-1 hover:bg-orange-100 dark:hover:bg-orange-900/20 rounded transition-colors group"
                   aria-label="Upvote"
                 >
-                  <ArrowUp className="w-5 h-5 text-muted-foreground group-hover:text-orange-500" />
+                  <ArrowUp className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground group-hover:text-orange-500" />
                 </button>
-                <span className="text-sm font-bold text-foreground py-2">
+                <span className="text-sm font-bold text-foreground py-1 md:py-2 px-2 md:px-0">
                   {post.upvotes - post.downvotes || 0}
                 </span>
                 <button
@@ -185,23 +185,23 @@ const PostPage = () => {
                   className="p-1 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded transition-colors group"
                   aria-label="Downvote"
                 >
-                  <ArrowDown className="w-5 h-5 text-muted-foreground group-hover:text-blue-500" />
+                  <ArrowDown className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground group-hover:text-blue-500" />
                 </button>
               </div>
 
               {/* Post Content */}
-              <div className="flex-1 p-6">
+              <div className="flex-1 p-4 md:p-6">
                 {/* Post Header */}
-                <div className="flex items-center text-sm text-muted-foreground mb-3">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center text-xs sm:text-sm text-muted-foreground mb-3 gap-1 sm:gap-0">
                   <span className="font-medium text-foreground">Posted by u/{post.userDisplayName}</span>
-                  <span className="mx-2">•</span>
+                  <span className="hidden sm:inline mx-2">•</span>
                   <span>{new Date(post.createdAt).toLocaleDateString()} at {new Date(post.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                  <span className="mx-2">•</span>
+                  <span className="hidden sm:inline mx-2">•</span>
                   <span>{post.views} views</span>
                 </div>
 
                 {/* Post Title */}
-                <h1 className="text-2xl font-bold text-card-foreground mb-4 leading-tight">
+                <h1 className="text-xl md:text-2xl font-bold text-card-foreground mb-3 md:mb-4 leading-tight">
                   {post.title}
                 </h1>
 
@@ -215,8 +215,8 @@ const PostPage = () => {
 
           {/* Comments Section */}
           <div className="bg-card border border-border rounded-md">
-            <div className="p-6 border-b border-border">
-              <h2 className="text-xl font-bold text-card-foreground mb-4">
+            <div className="p-4 md:p-6 border-b border-border">
+              <h2 className="text-lg md:text-xl font-bold text-card-foreground mb-4">
                 {post.commentCount} Comments
               </h2>
 
@@ -232,7 +232,7 @@ const PostPage = () => {
                         value={commentText}
                         onChange={(e) => setCommentText(e.target.value)}
                         placeholder="Add a comment..."
-                        className="w-full p-3 border border-input bg-background rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent text-foreground placeholder-muted-foreground"
+                        className="w-full p-3 border border-input bg-background rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent text-foreground placeholder-muted-foreground text-sm md:text-base"
                         rows={3}
                         required
                       />
@@ -240,7 +240,7 @@ const PostPage = () => {
                         <button
                           type="submit"
                           disabled={submittingComment || !commentText.trim()}
-                          className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                          className="inline-flex items-center px-3 md:px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm md:text-base"
                         >
                           <Send className="w-4 h-4 mr-2" />
                           {submittingComment ? 'Posting...' : 'Comment'}
@@ -251,8 +251,8 @@ const PostPage = () => {
                 </form>
               ) : (
                 <div className="mb-6 p-4 bg-muted rounded-lg text-center">
-                  <p className="text-muted-foreground mb-2">Please sign in to comment</p>
-                  <button className="text-primary hover:text-primary/80 font-medium">
+                  <p className="text-muted-foreground mb-2 text-sm md:text-base">Please sign in to comment</p>
+                  <button className="text-primary hover:text-primary/80 font-medium text-sm md:text-base">
                     Sign In
                   </button>
                 </div>
@@ -268,13 +268,13 @@ const PostPage = () => {
                       </span>
                     </div>
                     <div className="flex-1">
-                      <div className="flex items-center text-sm text-muted-foreground mb-1">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center text-xs sm:text-sm text-muted-foreground mb-1 gap-1 sm:gap-0">
                         <span className="font-medium text-foreground">{comment.userDisplayName}</span>
-                        <span className="mx-2">•</span>
+                        <span className="hidden sm:inline mx-2">•</span>
                         <span>{new Date(comment.createdAt).toLocaleDateString()}</span>
                       </div>
-                      <p className="text-card-foreground">{comment.content}</p>
-                      <div className="flex items-center mt-2 text-xs text-muted-foreground">
+                      <p className="text-card-foreground text-sm md:text-base mb-2">{comment.content}</p>
+                      <div className="flex items-center text-xs text-muted-foreground">
                         <button className="flex items-center hover:bg-muted px-2 py-1 rounded mr-2">
                           <ArrowUp className="w-3 h-3 mr-1" />
                           {comment.upvotes}
@@ -291,8 +291,8 @@ const PostPage = () => {
 
               {post.comments.length === 0 && (
                 <div className="text-center py-8 text-muted-foreground">
-                  <MessageCircle className="w-12 h-12 mx-auto mb-3 text-muted-foreground/50" />
-                  <p>No comments yet. Be the first to share your thoughts!</p>
+                  <MessageCircle className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 text-muted-foreground/50" />
+                  <p className="text-sm md:text-base">No comments yet. Be the first to share your thoughts!</p>
                 </div>
               )}
             </div>

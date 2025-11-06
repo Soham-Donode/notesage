@@ -122,45 +122,45 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-start justify-center pt-20"
+      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-start justify-center pt-16 sm:pt-20"
       onClick={(e) => {
         if (e.target === overlayRef.current) {
           onClose();
         }
       }}
     >
-      <div className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[80vh] overflow-hidden">
+      <div className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[85vh] sm:max-h-[80vh] overflow-hidden">
         {/* Search Input */}
         <div className="flex items-center gap-3 p-4 border-b border-border">
-          <Search className="w-5 h-5 text-muted-foreground" />
+          <Search className="w-5 h-5 text-muted-foreground flex-shrink-0" />
           <input
             ref={inputRef}
             type="text"
             placeholder="Search posts, topics, and content..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex-1 bg-transparent outline-none text-foreground placeholder-muted-foreground text-lg"
+            className="flex-1 bg-transparent outline-none text-foreground placeholder-muted-foreground text-base sm:text-lg min-w-0"
           />
           <button
             onClick={onClose}
-            className="p-1 hover:bg-muted rounded-lg transition-colors"
+            className="p-1 hover:bg-muted rounded-lg transition-colors flex-shrink-0"
           >
             <X className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
 
         {/* Results */}
-        <div className="max-h-[60vh] overflow-y-auto">
+        <div className="max-h-[65vh] sm:max-h-[60vh] overflow-y-auto">
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              <span className="ml-3 text-muted-foreground">Searching...</span>
+            <div className="flex items-center justify-center py-8 sm:py-12">
+              <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-primary"></div>
+              <span className="ml-3 text-muted-foreground text-sm sm:text-base">Searching...</span>
             </div>
           ) : hasSearched && results.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-4xl mb-4">🔍</div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">No results found</h3>
-              <p className="text-muted-foreground">
+            <div className="text-center py-8 sm:py-12 px-4">
+              <div className="text-3xl sm:text-4xl mb-4">🔍</div>
+              <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">No results found</h3>
+              <p className="text-muted-foreground text-sm">
                 Try adjusting your search terms or check your spelling.
               </p>
             </div>
@@ -171,39 +171,39 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose }) => {
                   key={post._id}
                   href={`/post/${post._id}`}
                   onClick={onClose}
-                  className="block p-4 hover:bg-muted/50 transition-colors"
+                  className="block p-3 sm:p-4 hover:bg-muted/50 transition-colors"
                 >
-                  <div className="flex items-start justify-between">
+                  <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-foreground mb-1 truncate">
+                      <h3 className="font-semibold text-foreground mb-1 truncate text-sm sm:text-base">
                         {highlightText(post.title, query)}
                       </h3>
-                      <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
+                      <p className="text-xs sm:text-sm text-muted-foreground mb-2 line-clamp-2">
                         {highlightText(post.content.substring(0, 200), query)}
                         {post.content.length > 200 && '...'}
                       </p>
-                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
                         <span className="bg-secondary text-secondary-foreground px-2 py-1 rounded-full">
                           {getTopicDisplayName(post.topic)}
                         </span>
-                        <span>by {post.userDisplayName}</span>
-                        <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                        <span className="truncate">by {post.userDisplayName}</span>
+                        <span className="hidden sm:inline">{new Date(post.createdAt).toLocaleDateString()}</span>
                         <span className="flex items-center gap-1">
                           <span className="text-green-600">↑{post.upvotes}</span>
                           <span className="text-red-600">↓{post.downvotes}</span>
                         </span>
                       </div>
                     </div>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground ml-3 flex-shrink-0" />
+                    <ArrowRight className="w-4 h-4 text-muted-foreground ml-2 flex-shrink-0" />
                   </div>
                 </Link>
               ))}
             </div>
           ) : query.trim() === '' ? (
-            <div className="text-center py-12">
-              <div className="text-4xl mb-4">💡</div>
-              <h3 className="text-lg font-semibold text-foreground mb-2">Start searching</h3>
-              <p className="text-muted-foreground">
+            <div className="text-center py-8 sm:py-12 px-4">
+              <div className="text-3xl sm:text-4xl mb-4">💡</div>
+              <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">Start searching</h3>
+              <p className="text-muted-foreground text-sm">
                 Search for posts, topics, or specific content across all subjects.
               </p>
             </div>

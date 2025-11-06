@@ -101,54 +101,54 @@ const App: React.FC = () => {
 
     // Chat Panel Component (Left Side): Displays the chat interface.
     const ChatPanel: React.FC = () => (
-        <aside className="fixed top-16 left-0 w-full md:w-1/3 lg:w-1/4 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 flex flex-col">
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <aside className="fixed top-16 left-0 w-full md:w-1/3 lg:w-1/4 h-[calc(100vh-4rem)] bg-card border-r border-border flex flex-col z-10 md:z-auto">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
                 {messages.map((msg, index) => (
                     <div key={index} className={`flex items-start gap-3 ${msg.role === 'user' ? 'justify-end' : ''}`}>
                         {msg.role === 'bot' && (
-                            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                                <Bot className="w-5 h-5 text-blue-600" />
+                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                <Bot className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                             </div>
                         )}
-                        <div className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${msg.role === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 'bg-gray-100 text-gray-800 rounded-bl-none'} ${msg.isError ? 'bg-red-100 text-red-700' : ''}`}>
-                            <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                        <div className={`max-w-[75%] sm:max-w-xs lg:max-w-md px-3 sm:px-4 py-2 sm:py-3 rounded-2xl text-sm sm:text-base ${msg.role === 'user' ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-muted text-card-foreground rounded-bl-none'} ${msg.isError ? 'bg-destructive/10 text-destructive' : ''}`}>
+                            <p className="whitespace-pre-wrap">{msg.content}</p>
                         </div>
                          {msg.role === 'user' && (
-                            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
-                                <User className="w-5 h-5 text-gray-600" />
+                            <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
+                                <User className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                             </div>
                         )}
                     </div>
                 ))}
                 {isLoading && (
                      <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                            <Bot className="w-5 h-5 text-blue-600" />
+                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <Bot className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                         </div>
-                        <div className="max-w-xs lg:max-w-md px-4 py-3 rounded-2xl bg-gray-100 text-gray-800 rounded-bl-none">
-                           <Loader className="w-5 h-5 animate-spin text-gray-500" />
+                        <div className="max-w-[75%] sm:max-w-xs lg:max-w-md px-3 sm:px-4 py-2 sm:py-3 rounded-2xl bg-muted text-card-foreground rounded-bl-none">
+                           <Loader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-muted-foreground" />
                         </div>
                     </div>
                 )}
                 <div ref={messagesEndRef} />
             </div>
-            <div className="p-4 border-t border-gray-200">
-                {error && <p className="text-xs text-red-500 mb-2">{error}</p>}
+            <div className="p-3 sm:p-4 border-t border-border">
+                {error && <p className="text-xs text-destructive mb-2">{error}</p>}
                 <div className="relative">
                     <textarea
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
                         onKeyPress={handleKeyPress}
                         placeholder="Refactor this, explain that..."
-                        className="w-full pl-4 pr-12 py-3 bg-gray-100 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow duration-200"
+                        className="w-full pl-3 sm:pl-4 pr-10 sm:pr-12 py-2 sm:py-3 bg-muted rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-ring transition-shadow duration-200 text-sm sm:text-base"
                         rows={1}
                     />
                     <button
                         onClick={handleSendPrompt}
                         disabled={isLoading || !prompt.trim()}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 sm:w-9 sm:h-9 bg-primary text-primary-foreground rounded-full flex items-center justify-center hover:bg-primary/90 disabled:bg-primary/50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
                     >
-                        <ArrowRight className="w-5 h-5" />
+                        <ArrowRight className="w-3 h-3 sm:w-5 sm:h-5" />
                     </button>
                 </div>
             </div>
@@ -157,28 +157,28 @@ const App: React.FC = () => {
 
     // Notes Preview Component (Right Side): Displays the generated notes.
     const NotesPreview: React.FC = () => (
-        <main className="ml-90 md:ml-1/3 lg:ml-1/4 pt-16 bg-gray-50/50 ">
-            <div className="p-6 sm:p-8 md:p-12 min-h-[calc(100vh-4rem)]">
+        <main className="ml-0 md:ml-[33.333%] lg:ml-[25%] pt-16 bg-background/50 min-h-screen">
+            <div className="p-4 sm:p-6 md:p-8 lg:p-12 min-h-[calc(100vh-4rem)]">
                 <div className="max-w-4xl mx-auto">
-                    <div className="flex justify-end mb-6">
+                    <div className="flex justify-end mb-4 sm:mb-6">
                         <button 
                             onClick={() => window.print()}
-                            className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            className="flex items-center justify-center px-3 sm:px-4 py-2 bg-primary text-primary-foreground rounded-lg shadow-md hover:bg-primary/90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring text-sm sm:text-base"
                         >
                             <FileDown className="w-4 h-4 mr-2" />
                             Export as PDF
                         </button>
                     </div>
-                    <div className="bg-white p-8 sm:p-10 md:p-12 rounded-2xl shadow-lg border border-gray-200 min-h-[70vh]">
+                    <div className="bg-card p-4 sm:p-6 md:p-8 lg:p-12 rounded-2xl shadow-lg border border-border min-h-[60vh] sm:min-h-[70vh]">
                         {generatedNotes ? (
-                            <article className="prose lg:prose-xl max-w-none">
+                            <article className="prose prose-sm sm:prose-base lg:prose-lg xl:prose-xl max-w-none text-card-foreground">
                                 <div dangerouslySetInnerHTML={{ __html: generatedNotes.replace(/\n/g, '<br />') }} />
                             </article>
                         ) : (
-                            <div className="flex flex-col items-center justify-center h-full text-center text-gray-400">
-                                <Sparkles className="w-16 h-16 mb-4 text-gray-300" />
-                                <h2 className="text-2xl font-semibold">Notes as good as you are...</h2>
-                                <p className="mt-2 text-gray-500">Your generated notes will appear here.</p>
+                            <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground py-8 sm:py-12">
+                                <Sparkles className="w-12 h-12 sm:w-16 sm:h-16 mb-4 text-muted-foreground/50" />
+                                <h2 className="text-xl sm:text-2xl font-semibold mb-2">Notes as good as you are...</h2>
+                                <p className="text-sm sm:text-base text-muted-foreground">Your generated notes will appear here.</p>
                             </div>
                         )}
                     </div>
@@ -189,8 +189,8 @@ const App: React.FC = () => {
 
     // Main App Layout
     return (
-        <div className="font-sans antialiased text-gray-900 bg-white">
-            <div className="flex flex-col">
+        <div className="font-sans antialiased text-card-foreground bg-background">
+            <div className="flex flex-col md:flex-row">
                 <ChatPanel />
                 <NotesPreview />
             </div>
