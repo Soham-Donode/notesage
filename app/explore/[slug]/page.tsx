@@ -8,6 +8,7 @@ import PostPreview from '@/components/PostPreview';
 import PostForm from '@/components/PostForm';
 import { ArrowLeft } from 'lucide-react';
 import { useTheme } from '@/components/ThemeProvider';
+import SearchOverlay from '@/components/SearchOverlay';
 
 const topics = [
 	{
@@ -81,6 +82,7 @@ const TopicPage = () => {
 	const [posts, setPosts] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [isPostFormOpen, setIsPostFormOpen] = useState(false);
+	const [isSearchOpen, setIsSearchOpen] = useState(false);
 	const { theme } = useTheme();
 
 	const topic = topics.find((t) => t.slug === slug);
@@ -104,6 +106,18 @@ const TopicPage = () => {
 			fetchPosts();
 		}
 	}, [slug]);
+
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+				e.preventDefault();
+				setIsSearchOpen(true);
+			}
+		};
+
+		document.addEventListener('keydown', handleKeyDown);
+		return () => document.removeEventListener('keydown', handleKeyDown);
+	}, []);
 
 	const handleUpvote = async (postId: string) => {
 		try {
@@ -156,7 +170,7 @@ const TopicPage = () => {
 	if (!topic) {
 		return (
 			<div className="min-h-screen bg-background">
-				<NavBar />
+				<NavBar onSearchClick={() => setIsSearchOpen(true)} />
 				<div className="container mx-auto px-4 py-8">
 					<p>Topic not found.</p>
 				</div>
@@ -166,7 +180,7 @@ const TopicPage = () => {
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-background to-muted transition-colors duration-300">
-			<NavBar />
+			<NavBar onSearchClick={() => setIsSearchOpen(true)} />
 			<div className="container mx-auto px-4 py-6 sm:py-8">
 				<Link
 					href="/explore"
@@ -242,6 +256,7 @@ const TopicPage = () => {
 					onPost={fetchPosts}
 				/>
 			</div>
+			<SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 		</div>
 	);
 };

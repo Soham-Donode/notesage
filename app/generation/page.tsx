@@ -9,6 +9,7 @@ import { Editable, useEditor } from "@wysimark/react";
 import { useAuth } from "@clerk/nextjs";
 import AuthModal from "@/components/AuthModal";
 import { useRouter } from "next/navigation";
+import SearchOverlay from "@/components/SearchOverlay";
 
 const topics = [
 	{
@@ -87,6 +88,7 @@ export default function NoteSage() {
   const [posting, setPosting] = useState(false);
   const [saving, setSaving] = useState(false); // Track saving state
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const searchParams = useSearchParams();
   const prompt = searchParams.get("prompt");
@@ -110,6 +112,18 @@ export default function NoteSage() {
       }
     };
   }, [editingNoteId]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   useEffect(() => {
     if (!mounted) return;
@@ -349,7 +363,7 @@ export default function NoteSage() {
 
   return (
     <div className="h-screen w-full flex flex-col bg-background text-foreground">
-      <NavBar />
+      <NavBar onSearchClick={() => setIsSearchOpen(true)} />
 
       <div className="flex flex-col md:flex-row flex-1 min-h-0">
   <aside className="w-full md:w-80 border-r border-border flex flex-col justify-center bg-card h-auto md:h-full">
@@ -535,6 +549,7 @@ export default function NoteSage() {
           </div>
         </div>
       )}
+      <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </div>
   );
 }

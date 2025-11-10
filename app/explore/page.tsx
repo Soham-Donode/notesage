@@ -4,6 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import { NavBar } from '@/components/NavBar';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
+import SearchOverlay from '@/components/SearchOverlay';
 
 const topics = [
 	{
@@ -71,9 +73,23 @@ const topics = [
 ];
 
 const page = () => {
+	const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+				e.preventDefault();
+				setIsSearchOpen(true);
+			}
+		};
+
+		document.addEventListener('keydown', handleKeyDown);
+		return () => document.removeEventListener('keydown', handleKeyDown);
+	}, []);
+
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-background to-muted">
-			<NavBar />
+			<NavBar onSearchClick={() => setIsSearchOpen(true)} />
 			<div className="container mx-auto px-4 py-6 sm:py-8">
 				<div className="text-center mb-8 sm:mb-12">
 					<h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-3 sm:mb-4">
@@ -117,6 +133,7 @@ const page = () => {
 					))}
 				</div>
 			</div>
+			<SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 		</div>
 	);
 };

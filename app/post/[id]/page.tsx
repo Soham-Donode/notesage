@@ -8,6 +8,7 @@ import { ArrowLeft, MessageCircle, ArrowUp, ArrowDown, Send } from 'lucide-react
 import { useAuth } from '@clerk/nextjs';
 import AuthModal from '@/components/AuthModal';
 import ScrollableMarkdown from '@/components/ScrollableMarkdown';
+import SearchOverlay from '@/components/SearchOverlay';
 
 interface Comment {
   id: string;
@@ -45,12 +46,25 @@ const PostPage = () => {
   const [loading, setLoading] = useState(true);
   const [commentText, setCommentText] = useState('');
   const [submittingComment, setSubmittingComment] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useEffect(() => {
     if (postId) {
       fetchPost();
     }
   }, [postId]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const fetchPost = async () => {
     try {
@@ -130,7 +144,7 @@ const PostPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-muted">
-        <NavBar />
+        <NavBar onSearchClick={() => setIsSearchOpen(true)} />
         <div className="container mx-auto px-4 py-8">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
@@ -144,7 +158,7 @@ const PostPage = () => {
   if (!post) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-muted">
-        <NavBar />
+        <NavBar onSearchClick={() => setIsSearchOpen(true)} />
         <div className="container mx-auto px-4 py-8">
           <p>Post not found.</p>
         </div>
@@ -154,7 +168,7 @@ const PostPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted">
-      <NavBar />
+      <NavBar onSearchClick={() => setIsSearchOpen(true)} />
       <div className="container mx-auto px-4 py-8">
         <Link
           href={`/explore/${post.topic}`}
@@ -306,6 +320,7 @@ const PostPage = () => {
           onSignup={() => router.push("/signup")}
         />
       )}
+      <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </div>
   );
 };

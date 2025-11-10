@@ -45,8 +45,8 @@ const App: React.FC = () => {
                 const payload = {
                     contents: [{ role: "user", parts: [{ text: `Generate detailed, well-structured notes based on the following topic: "${currentPrompt}". The notes should be easy to read and suitable for exporting as a PDF.` }] }]
                 };
-                const apiKey = ""; // API key is handled by the environment
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                const apiKey = process.env.GEMINI_API_KEY || ""; // API key is handled by the environment
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
                 const response = await fetch(apiUrl, {
                     method: 'POST',

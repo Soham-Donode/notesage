@@ -7,6 +7,7 @@ import { NavBar } from "@/components/NavBar";
 import { useUserData } from "@/lib/useUserData";
 import { Search, Edit, Trash2, Share, Plus } from "lucide-react";
 import { useAuth } from "@clerk/nextjs";
+import SearchOverlay from "@/components/SearchOverlay";
 
 interface Note {
   _id: string;
@@ -27,6 +28,7 @@ const MyNotesPage = () => {
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const fetchNotes = async (search = "") => {
     try {
@@ -51,6 +53,18 @@ const MyNotesPage = () => {
       setLoading(false);
     }
   }, [userData, userLoading, searchQuery]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handleLogin = () => {
     router.push("/login");
@@ -115,7 +129,7 @@ const MyNotesPage = () => {
   if (userLoading || loading) {
     return (
       <>
-        <NavBar />
+        <NavBar onSearchClick={() => setIsSearchOpen(true)} />
         <div className="min-h-screen bg-background p-6 flex items-center justify-center">
           <div className="text-center">
             <div className="h-8 w-8 animate-spin rounded-full border-4 border-foreground border-t-transparent mx-auto mb-4"></div>
@@ -129,7 +143,7 @@ const MyNotesPage = () => {
   if (!userData) {
     return (
       <>
-        <NavBar />
+        <NavBar onSearchClick={() => setIsSearchOpen(true)} />
         <div className="min-h-screen bg-background p-6">
           <h1 className="text-3xl font-bold text-foreground mb-4">My Notes</h1>
           <p className="text-muted-foreground">Please log in to view your notes.</p>
@@ -141,7 +155,7 @@ const MyNotesPage = () => {
 
   return (
     <>
-      <NavBar />
+      <NavBar onSearchClick={() => setIsSearchOpen(true)} />
       <div className="min-h-screen bg-gradient-to-br from-background to-muted">
         <div className="container mx-auto px-4 py-6 sm:py-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
@@ -256,6 +270,7 @@ const MyNotesPage = () => {
       </div>
 
       {!userData && <AuthModal onLogin={handleLogin} onSignup={handleSignup} />}
+      <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );
 };

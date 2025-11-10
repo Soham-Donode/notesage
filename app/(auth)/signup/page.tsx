@@ -29,8 +29,9 @@ const SignUpPage = () => {
 
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       setPendingVerification(true);
-    } catch (err: any) {
-      setError(err.errors?.[0]?.message || "Something went wrong");
+    } catch (err: unknown) {
+      const error = err as { errors?: Array<{ message: string }> };
+      setError(error.errors?.[0]?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -57,7 +58,8 @@ const SignUpPage = () => {
         router.push("/my-notes");
       }
     } catch (err: unknown) {
-      setError((err as any)?.errors?.[0]?.message || "Invalid verification code");
+      const error = err as { errors?: Array<{ message: string }> };
+      setError(error.errors?.[0]?.message || "Invalid verification code");
     } finally {
       setLoading(false);
     }
