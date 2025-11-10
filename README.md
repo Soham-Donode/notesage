@@ -1,9 +1,3 @@
-++ Created File: /home/hyperghost/github/notesage/README.md
-<!--
-  README for NoteSage
-  A concise, professional README tailored to developers and maintainers.
--->
-
 # NoteSage
 
 NoteSage is a web application for generating, saving, and sharing study notes using AI. It combines a Next.js frontend with server-side API routes, Clerk authentication, and a MongoDB backend. The app allows users to generate notes from prompts, save them to a personal library, and publish posts to community topics.
@@ -22,16 +16,20 @@ Key features
 
 This project uses the following core libraries and services (links go to their official GitHub repositories or homepages):
 
-- Next.js — React framework and App Router: https://github.com/vercel/next.js
-- Tailwind CSS — Utility-first CSS framework: https://github.com/tailwindlabs/tailwindcss
-- Clerk — Authentication and user management: https://github.com/clerkinc/clerk-js
-- Mongoose — MongoDB ODM used in `lib/mongodb.ts`: https://github.com/Automattic/mongoose
-- html2pdf.js — Client-side PDF export used in generation page: https://github.com/eKoopmans/html2pdf.js
-- Lucide (icons) — Icon set and React bindings: https://github.com/lucide-icons/lucide
-- react-markdown / remark — Markdown rendering utilities used across the app: https://github.com/remarkjs/react-markdown
-- Wysimark (editor) — lightweight editor used for editing generated notes: https://www.npmjs.com/package/@wysimark/react
 
-If you want a single place to browse the libraries, this list includes the most relevant repos used by the application.
+<!-- Badges row: colored logo-style labels linking to official sources -->
+
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://github.com/vercel/next.js)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://github.com/tailwindlabs/tailwindcss)
+[![Clerk](https://img.shields.io/badge/Clerk-7C3AED?style=for-the-badge&logo=clerk&logoColor=white)](https://github.com/clerkinc/clerk-js)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://github.com/mongodb/mongo)
+[![Mongoose](https://img.shields.io/badge/Mongoose-884DFF?style=for-the-badge&logo=mongoose&logoColor=white)](https://github.com/Automattic/mongoose)
+[![html2pdf.js](https://img.shields.io/badge/html2pdf.js-FF6D00?style=for-the-badge)](https://github.com/eKoopmans/html2pdf.js)
+[![Wysimark](https://img.shields.io/badge/Wysimark-222222?style=for-the-badge)](https://www.npmjs.com/package/@wysimark/react)
+
+
+This list highlights the main technologies used in the app. Click the badges to go to the official project pages or repos.
 
 ---
 ---
@@ -84,11 +82,10 @@ Add screenshots to `public/screenshots/` and reference them here. Two suggested 
 
 Lander / Home page preview
 
-![Lander preview](/screenshots/lander-preview.png)
+<img width="1796" height="928" alt="Screenshot from 2025-11-10 15-04-58" src="https://github.com/user-attachments/assets/d961eeaa-bfad-4863-a034-93f87c4df579" />
 
 Generation page preview
-
-![Generation preview](/screenshots/generation-preview.png)
+<img width="1796" height="928" alt="Screenshot from 2025-11-10 15-06-56" src="https://github.com/user-attachments/assets/76b8cf4e-21dc-4837-9010-8124993c9675" />
 
 Notes
 
