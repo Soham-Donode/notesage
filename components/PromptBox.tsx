@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Pencil, Link as LinkIcon, ChevronRight } from "lucide-react";
+import { Pencil, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -63,25 +63,25 @@ export default function PromptBox({
 
   return (
     <>
-      <div className="flex justify-center items-start w-full pt-[150px]">
-        <div className="w-full max-w-2xl px-4">
+      <div className="flex justify-center items-start w-full pt-[100px] sm:pt-[150px]">
+        <div className="w-full max-w-2xl px-4 sm:px-6">
           {/* Hero Text */}
-          <h1 className="text-center text-2xl font-semibold text-foreground mb-6">
+          <h1 className="text-center text-xl sm:text-2xl font-semibold text-foreground mb-4 sm:mb-6">
             Notes tailored to your taste
           </h1>
 
           {/* Main Card */}
-          <div className="bg-card border border-border rounded-2xl shadow-sm p-6 hover:shadow-md transition-all duration-300 hover-scale">
+          <div className="bg-card border border-border rounded-2xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-all duration-300 hover-scale">
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Describe the topic"
-              className="w-full resize-none h-28 text-lg font-mono text-foreground placeholder-muted-foreground bg-transparent outline-none"
+              className="w-full resize-none h-24 sm:h-28 text-base sm:text-lg font-mono text-foreground placeholder-muted-foreground bg-transparent outline-none"
               disabled={!isLoaded}
             />
 
-            <div className="flex items-center justify-between mt-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-4 gap-3 sm:gap-0">
               <div className="flex items-center gap-2">
                 <label htmlFor="role" className="text-sm text-muted-foreground">
                   I am a:
@@ -100,20 +100,12 @@ export default function PromptBox({
                 </select>
               </div>
 
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  aria-label="Attach link"
-                  className="flex h-8 w-8 items-center justify-center rounded-md border border-input shadow-sm hover:bg-accent text-muted-foreground hover:text-accent-foreground hover-scale"
-                  disabled={!isLoaded}
-                >
-                  <LinkIcon size={14} />
-                </button>
+              <div className="flex items-center gap-3 w-full sm:w-auto">
                 <button
                   type="button"
                   onClick={handleGenerateClick}
                   disabled={!isLoaded || !text.trim()}
-                  className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-primary text-primary-foreground text-sm shadow hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed hover-scale button-press"
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 bg-primary text-primary-foreground text-sm shadow hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed hover-scale button-press"
                 >
                   <span>Generate</span>
                   <Pencil size={14} />
@@ -123,10 +115,10 @@ export default function PromptBox({
           </div>
 
           {/* Secondary Action */}
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-4 sm:mt-6">
             <Link
               href="/explore"
-              className="inline-flex items-center gap-2 border border-border rounded-full px-6 py-2 bg-background shadow-sm hover:bg-accent hover:text-accent-foreground hover-scale"
+              className="inline-flex items-center gap-2 border border-border rounded-full px-4 sm:px-6 py-2 bg-background shadow-sm hover:bg-accent hover:text-accent-foreground hover-scale text-sm"
             >
               <span>Check out notes communities</span>
               <ChevronRight size={14} />

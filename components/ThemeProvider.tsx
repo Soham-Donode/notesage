@@ -31,9 +31,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
     if (mounted) {
-      const root = window.document.documentElement;
-      root.setAttribute('data-theme', theme);
       localStorage.setItem('theme', theme);
     }
   }, [theme, mounted]);

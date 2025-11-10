@@ -9,6 +9,7 @@ import { Editable, useEditor } from "@wysimark/react";
 import { useAuth } from "@clerk/nextjs";
 import AuthModal from "@/components/AuthModal";
 import { useRouter } from "next/navigation";
+import SearchOverlay from "@/components/SearchOverlay";
 
 const topics = [
 	{
@@ -87,6 +88,7 @@ export default function NoteSage() {
   const [posting, setPosting] = useState(false);
   const [saving, setSaving] = useState(false); // Track saving state
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const searchParams = useSearchParams();
   const prompt = searchParams.get("prompt");
@@ -100,6 +102,27 @@ export default function NoteSage() {
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // Clean up edit note data when component unmounts or when editing is complete
+  useEffect(() => {
+    return () => {
+      if (editingNoteId) {
+        localStorage.removeItem('editNote');
+      }
+    };
+  }, [editingNoteId]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   useEffect(() => {
@@ -140,13 +163,13 @@ export default function NoteSage() {
             const note = JSON.parse(editNoteData);
             setMarkdown(note.content);
             setEditingNoteId(note._id);
-            localStorage.removeItem('editNote'); // Clean up
+            // Don't remove editNote data here - let it persist until save/cancel
           } catch (error) {
             console.error('Error parsing edit note data:', error);
           }
         }
 
-        // Check for stored notes data
+        // Check for stored notes data (only if not editing)
         const stored = localStorage.getItem("notesData");
         if (stored && !editNoteData) {
           try {
@@ -155,7 +178,7 @@ export default function NoteSage() {
           } catch (error) {
             console.error("Error parsing stored notes:", error);
           }
-        } else {
+        } else if (!editNoteData) {
           setMarkdown(`# Generated Notes
 
 **Key concept 1:** …
@@ -316,6 +339,7 @@ export default function NoteSage() {
         alert(editingNoteId ? 'Note updated successfully!' : 'Notes saved successfully!');
         if (editingNoteId) {
           setEditingNoteId(null);
+          localStorage.removeItem('editNote'); // Clean up after successful save
         }
       } else {
         const error = await response.json();
@@ -338,11 +362,11 @@ export default function NoteSage() {
   }
 
   return (
-    <div className="h-screen w-full min-w-[800px] flex flex-col bg-background text-foreground">
-      <NavBar />
+    <div className="h-screen w-full flex flex-col bg-background text-foreground">
+      <NavBar onSearchClick={() => setIsSearchOpen(true)} />
 
-      <div className="flex flex-1 min-h-0">
-  <aside className="w-100 border-r border-border flex flex-col justify-center bg-card h-full">
+      <div className="flex flex-col md:flex-row flex-1 min-h-0">
+  <aside className="w-full md:w-80 border-r border-border flex flex-col justify-center bg-card h-auto md:h-full">
   <div className="p-4 flex justify-center">
     <div className="flex items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2 w-full max-w-sm">
       <input
@@ -350,58 +374,84 @@ export default function NoteSage() {
         onChange={(e) => setRefactorText(e.target.value)}
         placeholder="      Refactor"
         aria-label="Refactor prompt"
-        className="flex-1 bg-transparent outline-none h-20 text-sm text-foreground placeholder-muted-foreground"
+        className="flex-1 bg-transparent outline-none h-12 md:h-20 text-sm text-foreground placeholder-muted-foreground"
         disabled={loading}
       />
       <button
         onClick={onRefactor}
         disabled={!refactorText.trim() || loading}
         aria-label="Refactor notes"
-        className="h-9 w-9 rounded-full bg-primary text-primary-foreground grid place-items-center hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        className="h-8 w-8 md:h-9 md:w-9 rounded-full bg-primary text-primary-foreground grid place-items-center hover:bg-primary/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <ArrowRight size={20} />
+        <ArrowRight size={16} />
       </button>
     </div>
   </div>
 </aside>
 
 
-        <main className="flex-1 overflow-auto p-6">
+        <main className="flex-1 overflow-auto p-4 md:p-6">
           {/* Action Buttons Header */}
-          <div className="mb-4 flex justify-end gap-3">
-            <button
-              onClick={handleSaveToNotes}
-              disabled={loading || !markdown.trim() || saving}
-              aria-label="Save to My Notes"
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-primary text-primary-foreground text-sm shadow hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
-            >
-              <span>{saving ? 'Saving...' : editingNoteId ? 'Update Note' : 'Save to My Notes'}</span>
-            </button>
-            <button
-              onClick={() => setShowPostModal(true)}
-              disabled={loading || !markdown.trim()}
-              aria-label="Post to Topic"
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-green-500 text-primary-foreground text-sm shadow hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
-            >
-              <Share size={16} />
-              <span>Post to Topic</span>
-            </button>
-            <button
-              onClick={handleExport}
-              disabled={loading || !markdown.trim()}
-              aria-label="Export to PDF"
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-blue-500 text-primary-foreground text-sm shadow hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
-            >
-              <Download size={16} />
-              <span>Export to pdf</span>
-            </button>
+          <div className="mb-4 flex flex-wrap justify-between items-center gap-2 md:gap-3">
+            {editingNoteId && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Editing note...</span>
+                <button
+                  onClick={() => {
+                    setEditingNoteId(null);
+                    localStorage.removeItem('editNote');
+                    setMarkdown(`# Generated Notes
+
+**Key concept 1:** …
+
+**Key concept 2:** …
+
+- Bulleted summary …
+- Another point …
+
+*Action items:* …`);
+                  }}
+                  className="text-xs text-muted-foreground hover:text-foreground underline"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+            <div className="flex flex-wrap gap-2 md:gap-3 ml-auto">
+              <button
+                onClick={handleSaveToNotes}
+                disabled={loading || !markdown.trim() || saving}
+                aria-label="Save to My Notes"
+                className="inline-flex items-center gap-2 rounded-xl px-3 md:px-4 py-2 bg-cyan-500/90 text-white text-xs md:text-sm border border-cyan-600 shadow hover:bg-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
+              >
+                <span>{saving ? 'Saving...' : editingNoteId ? 'Update Note' : 'Save to My Notes'}</span>
+              </button>
+              <button
+                onClick={() => setShowPostModal(true)}
+                disabled={loading || !markdown.trim()}
+                aria-label="Post to Topic"
+                className="inline-flex items-center gap-2 rounded-xl px-3 md:px-4 py-2 bg-purple-500/90 text-white text-xs md:text-sm shadow border border-purple-600  hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
+              >
+                <Share size={14} />
+                <span>Post to Topic</span>
+              </button>
+              <button
+                onClick={handleExport}
+                disabled={loading || !markdown.trim()}
+                aria-label="Export to PDF"
+                className="inline-flex items-center gap-2 rounded-xl px-3 md:px-4 py-2 bg-blue-500/90 text-white text-xs md:text-sm shadow border border-blue-600 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition hover-scale"
+              >
+                <Download size={14} />
+                <span>Export to pdf</span>
+              </button>
+            </div>
           </div>
 
-          <div className="relative rounded-2xl bg-card min-h-[72vh] p-4 card-shadow">
+          <div className="relative rounded-2xl bg-card min-h-[60vh] md:min-h-[72vh] p-3 md:p-4 card-shadow">
             {loading ? (
-              <div className="flex items-center justify-center h-[86vh]">
+              <div className="flex items-center justify-center h-[50vh] md:h-[86vh]">
                 <p 
-                  className={`text-3xl text-slate-500 ${
+                  className={`text-xl md:text-3xl text-muted-foreground ${
                     isGenerating ? 'pulse-opacity' : ''
                   }`}
                 >
@@ -412,13 +462,13 @@ export default function NoteSage() {
               <div className="space-y-3">
                 <div
                   ref={contentRef}
-                  className=" bg-white max-w-none p-4 rounded-xl"
+                  className=" bg-card max-w-none p-3 md:p-4 rounded-4xl"
                 >
                   {/* Keep the wysimark editor unstyled by our theme utilities.
                       We wrap it in a transparent container so it doesn't inherit
                       .text-card-foreground or .bg-card. The editor itself manages
                       its own appearance. */}
-                  <div className="bg-transparent text-inherit">
+                  <div className="bg-white text-inherit ">
                     <Editable
                       editor={editor}
                       value={markdown}
@@ -428,7 +478,7 @@ export default function NoteSage() {
                         localStorage.setItem("notesData", JSON.stringify({ markdown: newMarkdown, timestamp: Date.now() }));
                       }}
                       placeholder="Your notes will appear here..."
-                      className="min-h-[68vh] bg-transparent"
+                      className="min-h-[50vh] md:min-h-[68vh] bg-transparent"
                       throttleInMs={1000}
                     />
                   </div>
@@ -448,39 +498,39 @@ export default function NoteSage() {
 
       {/* Post to Topic Modal */}
       {showPostModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[80vh] overflow-hidden">
-            <div className="p-6 border-b border-gray-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-card rounded-2xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-hidden border border-border">
+            <div className="p-4 md:p-6 border-b border-border">
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900">Post Notes to Topic</h2>
+                <h2 className="text-xl md:text-2xl font-bold text-card-foreground">Post Notes to Topic</h2>
                 <button
                   onClick={() => setShowPostModal(false)}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className="p-2 hover:bg-muted rounded-full transition-colors"
                 >
-                  <span className="text-2xl text-gray-400">×</span>
+                  <span className="text-xl md:text-2xl text-muted-foreground">×</span>
                 </button>
               </div>
-              <p className="text-gray-600 mt-2">Choose a topic to share your generated notes with the community</p>
+              <p className="text-muted-foreground mt-2 text-sm md:text-base">Choose a topic to share your generated notes with the community</p>
             </div>
 
-            <div className="p-6 overflow-y-auto max-h-[60vh]">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 md:p-6 overflow-y-auto max-h-[60vh]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 {topics.map((topic) => (
                   <button
                     key={topic.slug}
                     onClick={() => handlePostToTopic(topic.slug)}
                     disabled={posting}
-                    className="p-4 border border-gray-200 rounded-xl hover:border-blue-300 hover:shadow-md transition-all duration-200 text-left disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-3 md:p-4 border border-border rounded-xl hover:border-primary/50 hover:shadow-md transition-all duration-200 text-left disabled:opacity-50 disabled:cursor-not-allowed bg-card hover:bg-muted/50"
                   >
                     <div className="flex items-start space-x-3">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span className="text-white font-bold text-lg">
+                      <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-primary to-primary/80 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-primary-foreground font-bold text-base md:text-lg">
                           {topic.name.charAt(0)}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900 mb-1">{topic.name}</h3>
-                        <p className="text-sm text-gray-600 line-clamp-2">{topic.description}</p>
+                        <h3 className="font-semibold text-card-foreground mb-1 text-sm md:text-base">{topic.name}</h3>
+                        <p className="text-xs md:text-sm text-muted-foreground line-clamp-2">{topic.description}</p>
                       </div>
                     </div>
                   </button>
@@ -489,16 +539,17 @@ export default function NoteSage() {
             </div>
 
             {posting && (
-              <div className="p-4 border-t border-gray-200 bg-gray-50">
+              <div className="p-4 border-t border-border bg-muted">
                 <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mr-3"></div>
-                  <span className="text-gray-700">Posting your notes...</span>
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mr-3"></div>
+                  <span className="text-card-foreground text-sm md:text-base">Posting your notes...</span>
                 </div>
               </div>
             )}
           </div>
         </div>
       )}
+      <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </div>
   );
 }

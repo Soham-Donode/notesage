@@ -7,6 +7,8 @@ import { NavBar } from '@/components/NavBar';
 import PostPreview from '@/components/PostPreview';
 import PostForm from '@/components/PostForm';
 import { ArrowLeft } from 'lucide-react';
+import { useTheme } from '@/components/ThemeProvider';
+import SearchOverlay from '@/components/SearchOverlay';
 
 const topics = [
 	{
@@ -80,6 +82,8 @@ const TopicPage = () => {
 	const [posts, setPosts] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [isPostFormOpen, setIsPostFormOpen] = useState(false);
+	const [isSearchOpen, setIsSearchOpen] = useState(false);
+	const { theme } = useTheme();
 
 	const topic = topics.find((t) => t.slug === slug);
 
@@ -102,6 +106,18 @@ const TopicPage = () => {
 			fetchPosts();
 		}
 	}, [slug]);
+
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+				e.preventDefault();
+				setIsSearchOpen(true);
+			}
+		};
+
+		document.addEventListener('keydown', handleKeyDown);
+		return () => document.removeEventListener('keydown', handleKeyDown);
+	}, []);
 
 	const handleUpvote = async (postId: string) => {
 		try {
@@ -154,7 +170,7 @@ const TopicPage = () => {
 	if (!topic) {
 		return (
 			<div className="min-h-screen bg-background">
-				<NavBar />
+				<NavBar onSearchClick={() => setIsSearchOpen(true)} />
 				<div className="container mx-auto px-4 py-8">
 					<p>Topic not found.</p>
 				</div>
@@ -163,41 +179,41 @@ const TopicPage = () => {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-			<NavBar />
-			<div className="container mx-auto px-4 py-8">
+		<div className="min-h-screen bg-gradient-to-br from-background to-muted transition-colors duration-300">
+			<NavBar onSearchClick={() => setIsSearchOpen(true)} />
+			<div className="container mx-auto px-4 py-6 sm:py-8">
 				<Link
 					href="/explore"
-					className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors"
+					className="inline-flex items-center text-muted-foreground hover:text-foreground mb-4 sm:mb-6 transition-colors"
 				>
-					<ArrowLeft className="w-5 h-5 mr-2" />
+					<ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
 					Back to Explore
 				</Link>
 
-				<div className="mb-12 text-center">
-					<h1 className="text-5xl font-bold text-gray-900 mb-4">{topic.name}</h1>
-					<p className="text-xl text-gray-600 max-w-2xl mx-auto">
+				<div className="mb-8 sm:mb-12 text-center">
+					<h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-3 sm:mb-4 transition-colors duration-300">{topic.name}</h1>
+					<p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto transition-colors duration-300 px-4">
 						{topic.description}
 					</p>
 				</div>
 
-				<div className="mb-8 flex justify-center">
+				<div className="mb-6 sm:mb-8 flex justify-center">
 					<button
 						onClick={() => setIsPostFormOpen(true)}
-						className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+						className="border border-white/50 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 hover-scale text-sm sm:text-base"
 					>
 						✏️ Share Your Knowledge
 					</button>
 				</div>
 
-				<div className="max-w-4xl mx-auto">
+				<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 					{loading ? (
-						<div className="text-center py-12">
-							<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-							<p className="text-gray-600">Loading posts...</p>
+						<div className="text-center py-8 sm:py-12">
+							<div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-primary mx-auto mb-4 transition-colors duration-300"></div>
+							<p className="text-muted-foreground transition-colors duration-300">Loading posts...</p>
 						</div>
 					) : posts.length > 0 ? (
-						<div className="space-y-4">
+						<div className="space-y-3 sm:space-y-4 lg:space-y-6">
 							{posts.map((post: any) => (
 								<PostPreview
 									key={post._id}
@@ -215,17 +231,17 @@ const TopicPage = () => {
 							))}
 						</div>
 					) : (
-						<div className="text-center py-16 bg-white rounded-2xl shadow-lg">
-							<div className="text-6xl mb-4">📚</div>
-							<h3 className="text-2xl font-bold text-gray-900 mb-2">
+						<div className="text-center py-12 sm:py-16 bg-card rounded-2xl shadow-lg border border-border transition-all duration-300">
+							<div className="text-5xl sm:text-6xl mb-4">📚</div>
+							<h3 className="text-xl sm:text-2xl font-bold text-card-foreground mb-2 transition-colors duration-300">
 								No posts yet
 							</h3>
-							<p className="text-gray-600 mb-6">
+							<p className="text-muted-foreground mb-4 sm:mb-6 transition-colors duration-300 px-4">
 								Be the first to share knowledge in this topic!
 							</p>
 							<button
 								onClick={() => setIsPostFormOpen(true)}
-								className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+								className="bg-primary text-primary-foreground px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-primary/90 transition-all duration-300 hover-scale text-sm sm:text-base"
 							>
 								Create First Post
 							</button>
@@ -240,6 +256,7 @@ const TopicPage = () => {
 					onPost={fetchPosts}
 				/>
 			</div>
+			<SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 		</div>
 	);
 };

@@ -4,6 +4,8 @@ import React from 'react';
 import Link from 'next/link';
 import { NavBar } from '@/components/NavBar';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
+import SearchOverlay from '@/components/SearchOverlay';
 
 const topics = [
 	{
@@ -71,23 +73,37 @@ const topics = [
 ];
 
 const page = () => {
+	const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+				e.preventDefault();
+				setIsSearchOpen(true);
+			}
+		};
+
+		document.addEventListener('keydown', handleKeyDown);
+		return () => document.removeEventListener('keydown', handleKeyDown);
+	}, []);
+
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-background to-muted">
-			<NavBar />
-			<div className="container mx-auto px-4 py-8">
-				<div className="text-center mb-12">
-					<h1 className="text-5xl font-bold text-foreground mb-4">
+			<NavBar onSearchClick={() => setIsSearchOpen(true)} />
+			<div className="container mx-auto px-4 py-6 sm:py-8">
+				<div className="text-center mb-8 sm:mb-12">
+					<h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-3 sm:mb-4">
 						Explore Topics
 					</h1>
-					<p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+					<p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
 						Discover and share knowledge across various academic disciplines
 					</p>
 				</div>
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
 					{topics.map((topic) => (
 						<Link key={topic.slug} href={`/explore/${topic.slug}`}>
 							<div className="group relative bg-card rounded-2xl shadow-sm hover:shadow-md transition-all duration-500 overflow-hidden cursor-pointer transform hover:-translate-y-2 border border-border hover-scale">
-								<div className="relative h-56">
+								<div className="relative h-48 sm:h-56">
 									<Image
 										src={topic.image}
 										alt={topic.name}
@@ -95,21 +111,21 @@ const page = () => {
 										className="object-cover transition-transform duration-500 group-hover:scale-110"
 									/>
 									<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-									<div className="absolute bottom-6 left-6 right-6">
-										<h2 className="text-white text-2xl font-bold mb-3 drop-shadow-lg">{topic.name}</h2>
-										<p className="text-white/90 text-sm leading-relaxed drop-shadow-md">{topic.description}</p>
+									<div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6">
+										<h2 className="text-white text-xl sm:text-2xl font-bold mb-2 sm:mb-3 drop-shadow-lg">{topic.name}</h2>
+										<p className="text-white/90 text-xs sm:text-sm leading-relaxed drop-shadow-md line-clamp-2">{topic.description}</p>
 									</div>
-									<div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
-										<span className="text-white text-sm font-medium">Explore</span>
+									<div className="absolute top-3 sm:top-4 right-3 sm:right-4 bg-white/20 backdrop-blur-sm rounded-full px-2 sm:px-3 py-1">
+										<span className="text-white text-xs sm:text-sm font-medium">Explore</span>
 									</div>
 								</div>
-								<div className="p-6 bg-gradient-to-r from-muted to-accent/50">
+								<div className="p-4 sm:p-6 bg-gradient-to-r from-muted to-accent/50">
 									<div className="flex items-center justify-between">
-										<div className="flex items-center text-sm text-muted-foreground">
+										<div className="flex items-center text-xs sm:text-sm text-muted-foreground">
 											<div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
 											Active Community
 										</div>
-										<div className="text-primary font-semibold text-sm">View Posts →</div>
+										<div className="text-primary font-semibold text-xs sm:text-sm">View Posts →</div>
 									</div>
 								</div>
 							</div>
@@ -117,6 +133,7 @@ const page = () => {
 					))}
 				</div>
 			</div>
+			<SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 		</div>
 	);
 };
