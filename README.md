@@ -1,3 +1,196 @@
+++ Created File: /home/hyperghost/github/notesage/README.md
+<!--
+  README for NoteSage
+  A concise, professional README tailored to developers and maintainers.
+-->
+
+# NoteSage
+
+NoteSage is a web application for generating, saving, and sharing study notes using AI. It combines a Next.js frontend with server-side API routes, Clerk authentication, and a MongoDB backend. The app allows users to generate notes from prompts, save them to a personal library, and publish posts to community topics.
+
+Key features
+
+- AI-powered notes generation (server-side LLM integration)
+- Save, edit and export notes (PDF)
+- Publish notes as posts in topic feeds
+- User authentication with Clerk
+- Community features: Explore topics, upvote/downvote posts
+
+---
+
+## Tech stack
+
+This project uses the following core libraries and services (links go to their official GitHub repositories or homepages):
+
+- Next.js — React framework and App Router: https://github.com/vercel/next.js
+- Tailwind CSS — Utility-first CSS framework: https://github.com/tailwindlabs/tailwindcss
+- Clerk — Authentication and user management: https://github.com/clerkinc/clerk-js
+- Mongoose — MongoDB ODM used in `lib/mongodb.ts`: https://github.com/Automattic/mongoose
+- html2pdf.js — Client-side PDF export used in generation page: https://github.com/eKoopmans/html2pdf.js
+- Lucide (icons) — Icon set and React bindings: https://github.com/lucide-icons/lucide
+- react-markdown / remark — Markdown rendering utilities used across the app: https://github.com/remarkjs/react-markdown
+- Wysimark (editor) — lightweight editor used for editing generated notes: https://www.npmjs.com/package/@wysimark/react
+
+If you want a single place to browse the libraries, this list includes the most relevant repos used by the application.
+
+---
+---
+
+## Table of contents
+
+- [Quick start](#quick-start)
+- [Environment](#environment)
+- [Scripts](#scripts)
+- [Architecture overview](#architecture-overview)
+- [Development notes](#development-notes)
+- [Contributing](#contributing)
+- [Troubleshooting](#troubleshooting)
+- [License](#license)
+
+---
+
+## Quick start
+
+1. Clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/Soham-Donode/notesage.git
+cd notesage
+npm install
+```
+
+2. Create environment variables (see [Environment](#environment) or copy `.env.example` to `.env.local`).
+
+3. Run the development server:
+
+```bash
+npm run dev
+```
+
+Open http://localhost:3000 in your browser.
+
+For a production build:
+
+```bash
+npm run build
+npm run start
+```
+
+---
+
+## Screenshots
+
+Add screenshots to `public/screenshots/` and reference them here. Two suggested placeholders are provided below — replace the image paths with real screenshots when available.
+
+Lander / Home page preview
+
+![Lander preview](/screenshots/lander-preview.png)
+
+Generation page preview
+
+![Generation preview](/screenshots/generation-preview.png)
+
+Notes
+
+- Create `public/screenshots/` and add `lander-preview.png` and `generation-preview.png` (recommended size: 1200×700px).
+- Use descriptive captions and alternate text for accessibility.
+
+
+## Environment
+
+Copy `.env.example` to `.env.local` and fill the values. Do NOT commit secrets to the repository.
+
+Required variables (used throughout the codebase):
+
+- NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...  # Clerk client key (exposed to client)
+- CLERK_SECRET_KEY=sk_...                  # Clerk server secret (server-only)
+- CLERK_WEBHOOK_SECRET=whsec_...           # Clerk webhook verification secret
+- GEMINI_API_KEY=...                       # Google/LLM API key used by server-side generation routes
+- MONGODB_URI=mongodb+srv://<user>:<password>@cluster.example.net/<db>?retryWrites=true&w=majority
+
+Optional / helpful variables:
+
+- NODE_ENV=development|production
+- PORT=3000
+- NEXTAUTH_URL=https://your-domain.com  # if deploying with providers that require it
+
+Notes
+
+- Variables prefixed with `NEXT_PUBLIC_` are available in client bundles.
+- Keep server-only keys out of client code and Git.
+
+---
+
+## Scripts
+
+- `npm run dev` — Start Next.js in development mode
+- `npm run build` — Build for production
+- `npm run start` — Start the production server (after build)
+- `npm run lint` — Run ESLint
+
+---
+
+## Architecture overview
+
+- Frontend: Next.js (App Router) + TypeScript + Tailwind CSS
+- Auth: Clerk (sign-up, sign-in, webhooks for user lifecycle)
+- Backend: Next.js API routes for notes, posts, generation, refactor, and webhooks
+- Database: MongoDB via Mongoose (connection in `lib/mongodb.ts`)
+- AI: Server-side integration with a generative model (configured in `app/api/generate/route.ts`)
+
+Key folders
+
+- `app/` — Next.js app routes and pages
+- `app/api/` — Serverless API routes (generation, posts, notes, webhooks, etc.)
+- `components/` — Reusable React components
+- `lib/` — Helpers (MongoDB connector, utilities)
+- `models/` — Mongoose models: `User`, `Post`, `Note`
+
+---
+
+## Development notes
+
+- Search overlay: `components/SearchOverlay.tsx` provides a site-wide search UI and is wired to the `NavBar` via the `onSearchClick` prop.
+- LLM keys: Generation happens on the server. The routes expect `GEMINI_API_KEY` to be set server-side. There are helper routes to test the key.
+- Webhooks: Clerk webhooks are verified using `CLERK_WEBHOOK_SECRET` in `app/api/webhooks/clerk/route.ts`.
+
+Quality gates
+
+- The project enforces ESLint rules which can fail the production build if not satisfied. Run `npm run lint` and fix issues before opening PRs.
+
+---
+
+## Contributing
+
+Contributions are welcome. A minimal workflow:
+
+1. Fork the repository
+2. Create a branch: `git checkout -b feat/your-feature`
+3. Make changes and run tests/lint
+4. Commit and push: `git push origin feat/your-feature`
+5. Open a Pull Request describing your changes
+
+Please include a short description and link to any related issue.
+
+---
+
+## Troubleshooting
+
+- Build fails with ESLint errors: run `npm run lint` and address reported issues. Some TypeScript `any` usages are flagged by `@typescript-eslint/no-explicit-any`.
+- `GEMINI_API_KEY` errors: verify the key is valid and that the server has access to it. There is an API route `app/api/test-key/route.ts` to help validate the key.
+- Clerk webhooks not verified: ensure `CLERK_WEBHOOK_SECRET` matches the secret in your Clerk dashboard and your webhook endpoint URL is correctly configured.
+
+If you hit issues not listed here, open an issue with logs and reproduction steps.
+
+---
+
+## License
+
+This repository does not include a license file. If you plan to open source it, add a `LICENSE` (for example MIT) and update this section.
+
+---
+
+Last updated: 2025-11-10
 # StudyFlow: AI-Powered Notes Generation & Community
 
 StudyFlow is an innovative web application designed to help students generate comprehensive, personalized notes using AI. The platform fosters collaborative learning, allowing students to share notes, form study groups, and connect with peers.
